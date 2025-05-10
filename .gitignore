@@ -19,3 +19,7 @@ build/
 
 # Local logs
 logs/
+
+# Ignore sample PDFs and output artifacts
+output/
+samples/
