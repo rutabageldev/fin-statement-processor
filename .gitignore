@@ -21,5 +21,8 @@ build/
 logs/
 
 # Ignore sample PDFs and output artifacts
-output/
-samples/
+output/*
+!output/.gitkeep
+
+samples/*
+!samples.gitkeep
