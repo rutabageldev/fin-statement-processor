@@ -3,7 +3,7 @@
 
 meta:
   statement_type: "CITI_CC"
-  version: "1.0"
+  version: "0.1"
   description: >
     Config-driven parsing rules to extract data from Citi credit card statements
 
@@ -14,17 +14,37 @@ account_summary_fields:
     data_type: float
     optional: false
 
+  - name: "min_payment_due"
+    label_patterns: ["(?i)minimum payment due"]
+    value_pattern: "\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
   - name: "payments"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^payments?\\b"]
+    value_pattern: "-?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "new_balance"
+    label_patterns: ["(?i)^new balance"]
+    value_pattern: "\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
 
   - name: "credits"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^credits?\\b"]
+    value_pattern: "-?\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
+
+  - name: "payment_due_date"
+    label_patterns: ["(?i)^payment due date"]
+    value_pattern: "\\b\\d{2}[/-]\\d{2}[/-]\\d{2,4}\\b"
+    data_type: date
+    optional: false
+
+to_be_implemented:
 
   - name: "purchases"
     label_patterns: []
@@ -44,19 +64,13 @@ account_summary_fields:
     data_type: float
     optional: false
 
-  - name: "interest"
+  - name: "interest_rate"
     label_patterns: []
     value_pattern: ""
     data_type: float
     optional: false
 
-  - name: "new_balance"
-    label_patterns: []
-    value_pattern: ""
-    data_type: float
-    optional: false
-
-  - name: "min_payment_due"
+  - name: "interest_paid"
     label_patterns: []
     value_pattern: ""
     data_type: float
@@ -69,12 +83,6 @@ account_summary_fields:
     optional: false
 
   - name: "bill_period_end"
-    label_patterns: []
-    value_pattern: ""
-    data_type: date
-    optional: false
-
-  - name: "payment_due_date"
     label_patterns: []
     value_pattern: ""
     data_type: date

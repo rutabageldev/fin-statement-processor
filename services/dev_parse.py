@@ -1,14 +1,16 @@
 import argparse
+import json
 import os
 from datetime import datetime
 from pathlib import Path
-from parser import route_to_parser, StatementType
+from .parser import route_to_parser, StatementType
 
 # import pandas as pd
 
 INPUT_FILE = Path("samples/sample_citi_cc_statement.pdf")
 STATEMENT_TYPE: StatementType = "CITI_CC"
 OUTPUT_FILE = Path("output/parsed_output.txt")
+SUMMARY_JSON = Path("output/account_summary.json")
 
 
 def parse_args():
@@ -57,6 +59,11 @@ def main(timestamped: bool):
             out.write("-" * 80 + "\n")
 
         print(f"✅ Parsed output written to: {output_file}")
+
+    if "account_summary" in parsed_statement:
+        with open(SUMMARY_JSON, "w", encoding="utf-8") as f:
+            json.dump(parsed_statement["account_summary"], f, indent=2)
+        print(f"✅ Account summary written to: {SUMMARY_JSON}")
 
 
 if __name__ == "__main__":

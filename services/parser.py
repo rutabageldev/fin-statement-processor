@@ -1,5 +1,5 @@
 from typing import Literal
-from citi_cc_parser import parse as parse_citi_cc
+from .citi_cc_parser import parse as parse_citi_cc
 
 # from ms_checking_parser import parse as parse_ms_checking
 
