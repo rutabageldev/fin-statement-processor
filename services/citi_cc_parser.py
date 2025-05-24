@@ -81,7 +81,13 @@ def extract_field_value(
                     case "int":
                         return int(raw_val)
                     case "date":
-                        for fmt in ("%m/%d/%Y", "%m-%d-%Y", "%Y-%m-%d"):
+                        for fmt in (
+                            "%m/%d/%Y",
+                            "%m-%d-%Y",
+                            "%m-%d-%y",
+                            "%m/%d/%y",
+                            "%Y-%m-%d",
+                        ):
                             try:
                                 return datetime.strptime(raw_val, fmt).date()
                             except ValueError:

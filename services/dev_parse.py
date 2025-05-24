@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from .parser import route_to_parser, StatementType
 
@@ -11,6 +11,13 @@ INPUT_FILE = Path("samples/sample_citi_cc_statement.pdf")
 STATEMENT_TYPE: StatementType = "CITI_CC"
 OUTPUT_FILE = Path("output/parsed_output.txt")
 SUMMARY_JSON = Path("output/account_summary.json")
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, date):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 def parse_args():
@@ -62,7 +69,9 @@ def main(timestamped: bool):
 
     if "account_summary" in parsed_statement:
         with open(SUMMARY_JSON, "w", encoding="utf-8") as f:
-            json.dump(parsed_statement["account_summary"], f, indent=2)
+            json.dump(
+                parsed_statement["account_summary"], f, indent=2, cls=DateTimeEncoder
+            )
         print(f"✅ Account summary written to: {SUMMARY_JSON}")
 
 
