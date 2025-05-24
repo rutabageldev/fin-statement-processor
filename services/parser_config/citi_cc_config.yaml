@@ -44,51 +44,51 @@ account_summary_fields:
     data_type: date
     optional: false
 
-to_be_implemented:
-
   - name: "purchases"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^purchases?\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
 
   - name: "cash_advances"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^cash advances?\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
 
   - name: "fees"
-    label_patterns: []
-    value_pattern: ""
-    data_type: float
-    optional: false
-
-  - name: "interest_rate"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^fees?\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
 
   - name: "interest_paid"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^interest\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
 
   - name: "bill_period_start"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^billing period"]
+    value_pattern: "\\d{2}/\\d{2}/\\d{2,4}(?=-)"
     data_type: date
     optional: false
 
   - name: "bill_period_end"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^billing period"]
+    value_pattern: "(?<=-)\\d{2}/\\d{2}/\\d{2,4}"
     data_type: date
     optional: false
 
   - name: "credit_limit"
+    label_patterns: ["(?i)credit limit \\$"]
+    value_pattern: "\\$[\\d,]+(?:\\.\\d{2})?"
+    data_type: float
+    optional: false
+
+to_be_implemented:
+
+  - name: "interest_rate"
     label_patterns: []
     value_pattern: ""
     data_type: float
