@@ -1,9 +1,10 @@
+import csv
 import logging
 import pdfplumber
 import re
 from datetime import datetime
 from io import BytesIO
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 from .parser_config_loader import load_parser_config
 
 DEBUG_MODE = True
@@ -17,7 +18,7 @@ TRANSFORM_REGISTRY = {
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
 
-def parse(file_bytes: bytes) -> Dict[str, Any]:
+def parse(file_bytes: bytes, csv_path: Optional[str] = None) -> Dict[str, Any]:
     with pdfplumber.open(BytesIO(file_bytes)) as pdf:
         statement_lines: List[str] = []
 
@@ -28,11 +29,21 @@ def parse(file_bytes: bytes) -> Dict[str, Any]:
                 cleaned_lines = [line.strip() for line in raw_lines if line.strip()]
                 statement_lines.extend(cleaned_lines)
 
+        account_summary = extract_account_summary(statement_lines)
+        if csv_path:
+            transactions = extract_transaction_csv(csv_path)
+        else:
+            logging.warning(
+                "No CSV provided. PDF-based transaction extraction is not yet implemented."
+            )
+            transactions = []
+
         return {
             "source": "CITI_CC",
             "page_count": str(len(pdf.pages)),
             "statement_lines": statement_lines,
-            "account_summary": extract_account_summary(statement_lines),
+            "account_summary": account_summary,
+            "transactions": transactions,
         }
 
 
@@ -130,3 +141,47 @@ def extract_field_value(
                 return None
 
     return None
+
+
+def extract_transaction_csv(csv_path: str) -> List[Dict[str, Any]]:
+    transactions = []
+
+    with open(csv_path, newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            try:
+                date = datetime.strptime(row["Date"], "%m/%d/%Y").date()
+                description = row["Description"].strip()
+                debit = row["Debit"].strip()
+                credit = row["Credit"].strip()
+
+                if debit:
+                    amount = -float(debit.replace(",", ""))
+                    t_type = "debit"
+                elif credit:
+                    amount = float(credit.replace(",", ""))
+                    credit_desc = description.lower()
+                    if "online payment" in credit_desc:
+                        t_type = "payment"
+                    elif "redeemed" in credit_desc or "thankyou" in credit_desc:
+                        t_type = "refund"
+                    else:
+                        t_type = "credit"
+                else:
+                    continue  # No amount found, skip
+
+                transactions.append(
+                    {
+                        "date": date.isoformat(),
+                        "amount": amount,
+                        "description": description,
+                        "custom_description": None,
+                        "category": None,
+                        "type": t_type,
+                    }
+                )
+
+            except Exception as e:
+                print(f"⚠️ Skipping row due to error: {e}\nRow: {row}")
+
+    return transactions

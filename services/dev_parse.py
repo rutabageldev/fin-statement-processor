@@ -7,7 +7,8 @@ from .parser import route_to_parser, StatementType
 
 # import pandas as pd
 
-INPUT_FILE = Path("samples/sample_citi_cc_statement.pdf")
+INPUT_STATEMENT_FILE = Path("samples/sample_citi_cc_statement.pdf")
+INPUT_CSV_TRANSACTIONS = Path("sample_citi_cc_transactions.csv")
 STATEMENT_TYPE: StatementType = "CITI_CC"
 OUTPUT_FILE = Path("output/parsed_output.txt")
 SUMMARY_JSON = Path("output/account_summary.json")
@@ -33,10 +34,10 @@ def parse_args():
 
 
 def main(timestamped: bool):
-    if not INPUT_FILE.exists():
-        raise FileNotFoundError(f"Could not find input file: {INPUT_FILE}")
+    if not INPUT_STATEMENT_FILE.exists():
+        raise FileNotFoundError(f"Could not find input file: {INPUT_STATEMENT_FILE}")
 
-    with open(INPUT_FILE, "rb") as f:
+    with open(INPUT_STATEMENT_FILE, "rb") as f:
         file_bytes = f.read()
 
     parsed_statement = route_to_parser(file_bytes, STATEMENT_TYPE)
