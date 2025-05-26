@@ -86,30 +86,28 @@ account_summary_fields:
     data_type: float
     optional: false
 
-to_be_implemented:
-
-  - name: "interest_rate"
-    label_patterns: []
-    value_pattern: ""
-    data_type: float
-    optional: false
-
   - name: "available_credit"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)available credit \\$"]
+    value_pattern: "\\$[\\d,]+(?:\\.\\d{2})?"
     data_type: float
     optional: false
-
 
   - name: "points_earned"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)^total earned this period"]
+    value_pattern: "[\\d,]+"
     data_type: int
     optional: false
 
-
   - name: "points_redeemed"
-    label_patterns: []
-    value_pattern: ""
+    label_patterns: ["(?i)points redeemed"]
+    value_pattern: "-?\\$[\\d,]+\\.\\d{2}"
     data_type: int
+    transform: "dollars_to_points"
+    optional: true
+
+  - name: "interest_rate"
+    label_patterns: ["(?i)^standard purch \\d{1,2}\\.\\d{2}%"]
+    value_pattern: "\\d{1,2}\\.\\d{2}(?=%)"
+    data_type: float
+    transform: percent_to_decimal
     optional: false
