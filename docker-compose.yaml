@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  parser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fin-parser-dev
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    working_dir: /app
+    command: bash # start with a shell so you can run scripts manually
