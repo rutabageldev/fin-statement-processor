@@ -1,0 +1,113 @@
+# citi_cc_config.yaml
+# Configuration file for extracting structured data from Citi Double Cash credit card statement
+
+meta:
+  statement_type: "CITI_CC"
+  version: "0.1"
+  description: >
+    Config-driven parsing rules to extract data from Citi credit card statements
+
+account_summary_fields:
+  - name: "previous_balance"                      # Match the 'Previous balance' field and extract the dollar amount.
+    label_patterns: ["(?i)previous balance"]      # Case-insensitive math
+    value_pattern: "\\$[\\d,]+\\.\\d{2}"          # Matches $ followed by digits, optional comma, a decimal with 2 trailiing digits
+    data_type: float
+    optional: false
+
+  - name: "min_payment_due"
+    label_patterns: ["(?i)minimum payment due"]
+    value_pattern: "\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "payments"
+    label_patterns: ["(?i)^payments?\\b"]
+    value_pattern: "-?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "new_balance"
+    label_patterns: ["(?i)^new balance"]
+    value_pattern: "\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "credits"
+    label_patterns: ["(?i)^credits?\\b"]
+    value_pattern: "-?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "payment_due_date"
+    label_patterns: ["(?i)^payment due date"]
+    value_pattern: "\\b\\d{2}[/-]\\d{2}[/-]\\d{2,4}\\b"
+    data_type: date
+    optional: false
+
+  - name: "purchases"
+    label_patterns: ["(?i)^purchases?\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "cash_advances"
+    label_patterns: ["(?i)^cash advances?\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "fees"
+    label_patterns: ["(?i)^fees?\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "interest_paid"
+    label_patterns: ["(?i)^interest\\b"]
+    value_pattern: "\\+?\\$[\\d,]+\\.\\d{2}"
+    data_type: float
+    optional: false
+
+  - name: "bill_period_start"
+    label_patterns: ["(?i)^billing period"]
+    value_pattern: "\\d{2}/\\d{2}/\\d{2,4}(?=-)"
+    data_type: date
+    optional: false
+
+  - name: "bill_period_end"
+    label_patterns: ["(?i)^billing period"]
+    value_pattern: "(?<=-)\\d{2}/\\d{2}/\\d{2,4}"
+    data_type: date
+    optional: false
+
+  - name: "credit_limit"
+    label_patterns: ["(?i)credit limit \\$"]
+    value_pattern: "\\$[\\d,]+(?:\\.\\d{2})?"
+    data_type: float
+    optional: false
+
+  - name: "available_credit"
+    label_patterns: ["(?i)available credit \\$"]
+    value_pattern: "\\$[\\d,]+(?:\\.\\d{2})?"
+    data_type: float
+    optional: false
+
+  - name: "points_earned"
+    label_patterns: ["(?i)^total earned this period"]
+    value_pattern: "[\\d,]+"
+    data_type: int
+    optional: false
+
+  - name: "points_redeemed"
+    label_patterns: ["(?i)points redeemed"]
+    value_pattern: "-?\\$[\\d,]+\\.\\d{2}"
+    data_type: int
+    transform: "dollars_to_points"
+    optional: true
+
+  - name: "interest_rate"
+    label_patterns: ["(?i)^standard purch \\d{1,2}\\.\\d{2}%"]
+    value_pattern: "\\d{1,2}\\.\\d{2}(?=%)"
+    data_type: float
+    transform: percent_to_decimal
+    optional: false
