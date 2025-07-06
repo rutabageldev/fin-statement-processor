@@ -15,8 +15,12 @@ from services.account_registry import (
 
 
 load_dotenv()
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 
-LOG_LEVEL = os.getenv("LOg_LEVEL", "INFO").upper()
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s [%(levelname)s] %(message)s",
+)
 
 
 def parse_args():
