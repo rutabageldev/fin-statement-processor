@@ -1,3 +1,4 @@
+# Test Command: python main.py --account citi_cc --pdf path/to/sample.pdf
 import argparse
 import json
 import uuid
@@ -30,7 +31,7 @@ def main():
     results = {}
     if args.pdf:
         print(f"📄 Parsing PDF: {args.pdf}")
-        parse_pdf()
+        parse_pdf(args.account, args.pdf)
         results["account info"] = []  # Stubbed output
         # results.update(parse_pdf(args.pdf, args.account))
 
