@@ -26,3 +26,6 @@ output/*
 
 samples/*
 !samples.gitkeep
+
+tests/data/*
+!tests.data.gitkeep
