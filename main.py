@@ -1,4 +1,4 @@
-# Test Command: python main.py --account citi_cc --pdf ./tests/data/test-statement_citi-cc.pdf
+# Test Command: python main.py --account citi_cc --pdf ./tests/data/test-statement_citi-cc.pdf --csv ./tests/data/test-transactions_citi-cc.csv
 import argparse
 import json
 import uuid
@@ -40,7 +40,6 @@ def main():
     if args.csv:
         print(f"📈 Parsing CSV: {args.csv}")
         results["transactions"] = parse_csv(args.account, args.csv)
-        print(results["transactions"])
 
     # Determine output path
     statement_id = str(uuid.uuid4())
