@@ -1,4 +1,4 @@
-# Test Command: python main.py --account citi_cc --pdf path/to/sample.pdf
+# Test Command: python main.py --account citi_cc --pdf ./tests/data/test-statement_citi-cc.pdf
 import argparse
 import json
 import uuid
@@ -32,8 +32,7 @@ def main():
     if args.pdf:
         print(f"📄 Parsing PDF: {args.pdf}")
         parse_pdf(args.account, args.pdf)
-        results["account info"] = []  # Stubbed output
-        # results.update(parse_pdf(args.pdf, args.account))
+        results.update(parse_pdf(args.account, args.pdf))
 
     if args.csv:
         print(f"📈 CSV parsing is not implemented yet, skipping: {args.csv}")
