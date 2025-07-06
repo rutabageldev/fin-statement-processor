@@ -24,3 +24,7 @@ COPY . .
 
 # Default command - interactive shll (for dev container or override via compose)
 CMD [ "bash" ]
+
+# Install Git
+ARG INSTALL_GIT=true
+RUN if [ "$INSTALL_GIT" = "true" ]; then apt-get update && apt-get install -y git; fi

@@ -12,6 +12,24 @@
             ]
         }
     },
-    "postCreateCommand": "pip install -r requirements.txt",
-    "remoteUser": "root"
+    "postCreateCommand": [
+        "pip install -r requirements.txt",
+        "git config --global user.name 'rutabageldev'",
+        "git config --global user.email 'rutabageldev@gmail.com'"
+    ],
+    "remoteUser": "root",
+    "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+    ],
+    "remoteEnv": {
+    "GIT_SSH_COMMAND": "ssh -i /home/vscode/.ssh/id_ed25519"
+    },
+    "features": {
+    "ghcr.io/devcontainers/features/ssh-agent:1": {}
+    },
+    "build": {
+        "args": {
+            "INSTALL_GIT": "true"
+        }
+    }
 }
