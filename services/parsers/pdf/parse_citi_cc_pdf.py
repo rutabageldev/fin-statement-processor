@@ -9,7 +9,7 @@ from ..parser_config_loader import load_parser_config
 # Suppress noisy logs
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
-DEBUG_MODE = False
+logger = logging.getLogger(__name__)
 
 TRANSFORM_REGISTRY = {
     "dollars_to_points": lambda val: int(abs(float(val)) * 100),
@@ -18,19 +18,24 @@ TRANSFORM_REGISTRY = {
 
 
 def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
-    with pdfplumber.open(BytesIO(file_bytes)) as pdf:
-        statement_lines: List[str] = []
+    try:
+        with pdfplumber.open(BytesIO(file_bytes)) as pdf:
+            statement_lines: List[str] = []
 
-        for page in pdf.pages:
-            raw_text = page.extract_text()
-            if raw_text:
-                raw_lines = raw_text.splitlines()
-                cleaned_lines = [line.strip() for line in raw_lines if line.strip]
-                statement_lines.extend(cleaned_lines)
+            for page in pdf.pages:
+                raw_text = page.extract_text()
+                if raw_text:
+                    raw_lines = raw_text.splitlines()
+                    cleaned_lines = [line.strip() for line in raw_lines if line.strip]
+                    statement_lines.extend(cleaned_lines)
 
-        account_summary = extract_account_summary(statement_lines)
+            account_summary = extract_account_summary(statement_lines)
 
-        return account_summary
+            return account_summary
+
+    except Exception as e:
+        logger.exception("❌ Failed to parse Citi CC PDF")
+        raise
 
 
 def extract_account_summary(statement_lines: List[str]) -> Dict[str, Any]:
@@ -39,14 +44,19 @@ def extract_account_summary(statement_lines: List[str]) -> Dict[str, Any]:
     summary_data: Dict[str, Any] = {}
 
     for field in summary_fields:
-        summary_data[field["name"]] = extract_field_value(
-            lines=statement_lines,
-            label_patterns=field.get("label_patterns", []),
-            value_pattern=field.get("value_pattern", ""),
-            data_type=field.get("data_type", "string"),
-            field_name=field["name"],
-            transform=field.get("transform"),
-        )
+        try:
+            summary_data[field["name"]] = extract_field_value(
+                lines=statement_lines,
+                label_patterns=field.get("label_patterns", []),
+                value_pattern=field.get("value_pattern", ""),
+                data_type=field.get("data_type", "string"),
+                field_name=field["name"],
+                transform=field.get("transform"),
+            )
+
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to extract field '{field['name']}': {e}")
+            summary_data[field["name"]] = None  # Preserve key for consistency
 
     return summary_data
 
@@ -62,8 +72,7 @@ def extract_field_value(
     for line in lines:
         if any(re.search(label, line) for label in label_patterns):
             match_obj = re.search(value_pattern, line)
-            if DEBUG_MODE:
-                print(f"[DEBUG] line matched for '{field_name}' : {line}")
+            logger.debug(f"line matched for '{field_name}': {line}")
             if not match_obj:
                 logging.warning(
                     f"Found label match but no value match in line: '{line}'"
@@ -82,8 +91,8 @@ def extract_field_value(
                 )
                 transformed_val = cast(str | float | int, transformed_val)
             except ValueError:
-                logging.warning(
-                    f"Could not apply transform '{transform}' to '{raw_val}'"
+                logger.warning(
+                    f"Could not apply transform '{transform}' to value '{raw_val}'"
                 )
                 return None
 
@@ -108,13 +117,17 @@ def extract_field_value(
                                 )
                             except ValueError:
                                 continue
-                        logging.warning(f"Could not parse date format: '{val_str}'")
+                        logging.warning(
+                            f"Could not parse date format: '{val_str}' for field '{field_name}'"
+                        )
                         return None
                     case _:
                         return transformed_val
             except ValueError:
-                logging.warning(
-                    f"Could not convert '{transformed_val}' to '{data_type}'"
+                logger.warning(
+                    f"Could not cast '{transformed_val}' to {data_type} for '{field_name}'"
                 )
                 return None
+
+    logger.debug(f"No match found for field: {field_name}")
     return None
