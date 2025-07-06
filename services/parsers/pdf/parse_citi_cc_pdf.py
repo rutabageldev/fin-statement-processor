@@ -2,7 +2,6 @@ from typing import Any, Dict
 
 
 def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
-    print("Look at me, parsing that citi_cc pdf!")
     return {
         "source": "CITI_CC",
         "page_count": "3",
