@@ -4,12 +4,12 @@ import re
 from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, cast
-from ...parser_config_loader import load_parser_config
+from ..parser_config_loader import load_parser_config
 
 # Suppress noisy logs
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 TRANSFORM_REGISTRY = {
     "dollars_to_points": lambda val: int(abs(float(val)) * 100),
