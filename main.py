@@ -4,7 +4,10 @@ import json
 import uuid
 import os
 from dotenv import load_dotenv
-from services.parsers.dispatch_parser import parse_pdf  # CSV to be added later
+from services.parsers.dispatch_parser import (
+    parse_pdf,
+    parse_csv,
+)  # CSV to be added later
 from services.account_registry import (
     SUPPORTED_ACCOUNTS,
 )  # list of accounts that have been implemented
@@ -35,8 +38,9 @@ def main():
         results.update(parse_pdf(args.account, args.pdf))
 
     if args.csv:
-        print(f"📈 CSV parsing is not implemented yet, skipping: {args.csv}")
-        results["transactions"] = []  # Stubbed output
+        print(f"📈 Parsing CSV: {args.csv}")
+        results["transactions"] = parse_csv(args.account, args.csv)
+        print(results["transactions"])
 
     # Determine output path
     statement_id = str(uuid.uuid4())
