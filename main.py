@@ -15,9 +15,7 @@ from services.parsers.dispatch_parser import (
     parse_pdf,
     parse_csv,
 )  # CSV to be added later
-from services.account_registry import (
-    SUPPORTED_ACCOUNTS,
-)  # list of accounts that have been implemented
+from services.account_registry import SUPPORTED_ACCOUNTS
 
 
 def parse_args():

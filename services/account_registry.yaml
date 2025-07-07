@@ -1,0 +1,10 @@
+citi_cc:
+  name: Citi Double Cash Credit Card
+  uuid: 2e9283ff-cd06-4310-98f6-27a40c0fe16e
+  parsers:
+    pdf: parse_citi_cc_pdf.py
+    csv: parse_citi_cc_csv.py
+  metadata:
+    account_type: credit
+    issuer: Citi
+    enabled: true
