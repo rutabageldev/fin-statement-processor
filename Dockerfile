@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 
 # Accept build argument to control dev dependency install
 ARG INSTALL_DEV=false
-ARG INSTALL_GIT=true
+ARG INSTALL_GIT=false
 
 # Copy requirements
 COPY requirements.txt requirements-dev.txt ./
