@@ -1,10 +1,8 @@
 {
   "name": "fin-statement-processor-dev",
-  "context": "..",
-  "dockerComposeFile": "../docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yaml",
   "service": "parser",
   "workspaceFolder": "/app",
-  "runArgs": ["--env-file", ".env"],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -15,11 +13,6 @@
   },
   "postCreateCommand": "pre-commit install && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com'",
   "remoteUser": "root",
-  "build": {
-    "args": {
-      "INSTALL_GIT": "true"
-    }
-  },
   "mounts": [
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
   ],
