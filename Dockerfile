@@ -11,6 +11,7 @@ WORKDIR /app
 # Install system dependencies (add other later if needed, like tesseract/poppler)
 RUN apt-get update && apt-get install -y \
     build-essential \
+    bash \
     && rm -rf /var/lib/apt/lists/*
 
 # Accept build argument to control dev dependency install
@@ -32,7 +33,7 @@ RUN pip install --upgrade pip && \
 COPY . .
 
 # Default command - interactive shll (for dev container or override via compose)
-CMD [ "bash" ]
+CMD ["bash", "-c", "while true; do sleep 60; done"]
 
 # Install Git
-RUN if [ "$INSTALL_GIT" = "true" ]; then apt-get update && apt-get install -y git; fi
+RUN if [ "$INSTALL_DEV" = "true" ]; then apt-get update && apt-get install -y git; fi

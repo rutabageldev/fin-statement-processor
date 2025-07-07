@@ -13,4 +13,3 @@ services:
     env_file:
       - .env
     working_dir: /app
-    command: bash # start with a shell so you can run scripts manually
