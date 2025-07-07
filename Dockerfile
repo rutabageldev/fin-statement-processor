@@ -11,13 +11,14 @@ WORKDIR /app
 # Install system dependencies (add other later if needed, like tesseract/poppler)
 RUN apt-get update && apt-get install -y \
     build-essential \
-    && rm -rf /var/lib/aot/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Accept build argument to control dev dependency install
 ARG INSTALL_DEV=false
+ARG INSTALL_GIT=true
 
-# Copy only requirements first for caching
-COPY requirements.txt requirements-dev.txt./
+# Copy requirements
+COPY requirements.txt requirements-dev.txt ./
 
 # Install Python dependencies
 RUN pip install --upgrade pip && \
@@ -34,5 +35,4 @@ COPY . .
 CMD [ "bash" ]
 
 # Install Git
-ARG INSTALL_GIT=true
 RUN if [ "$INSTALL_GIT" = "true" ]; then apt-get update && apt-get install -y git; fi
