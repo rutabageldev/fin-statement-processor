@@ -1,6 +1,9 @@
 import csv
+import logging
 from datetime import datetime
 from typing import Any, Dict, List, TextIO
+
+logger = logging.getLogger(__name__)
 
 
 def parse_citi_cc_csv(csv_file: TextIO) -> List[Dict[str, Any]]:
@@ -31,7 +34,8 @@ def parse_citi_cc_csv(csv_file: TextIO) -> List[Dict[str, Any]]:
                 else:
                     transaction_type = "refund"
             else:
-                continue  # skip rows with no amount
+                logger.debug(f"Row {row} skipped: no debit or credit found.")
+                continue
 
             transactions.append(
                 {
@@ -45,6 +49,7 @@ def parse_citi_cc_csv(csv_file: TextIO) -> List[Dict[str, Any]]:
             )
 
         except Exception as e:
-            print(f"⚠️ Skipping row due to error: {e}\nRow: {row}")
+            logger.warning(f"⚠️ Skipping row {row} due to error: {e}\nRow: {row}")
 
+    logger.info(f"✅ Parsed {len(transactions)} valid transactions from CSV.")
     return transactions
