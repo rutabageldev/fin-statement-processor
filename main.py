@@ -1,10 +1,16 @@
 # Test Command: python main.py --account citi_cc --pdf ./tests/data/test-statement_citi-cc.pdf --csv ./tests/data/test-transactions_citi-cc.csv
+from dotenv import load_dotenv
+
+load_dotenv()
+
+import services.logging_config
+
 import argparse
 import json
 import logging
 import uuid
 import os
-from dotenv import load_dotenv
+
 from services.parsers.dispatch_parser import (
     parse_pdf,
     parse_csv,
@@ -12,15 +18,6 @@ from services.parsers.dispatch_parser import (
 from services.account_registry import (
     SUPPORTED_ACCOUNTS,
 )  # list of accounts that have been implemented
-
-
-load_dotenv()
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
-
-logging.basicConfig(
-    level=getattr(logging, LOG_LEVEL, logging.INFO),
-    format="%(asctime)s [%(levelname)s] %(message)s",
-)
 
 
 def parse_args():

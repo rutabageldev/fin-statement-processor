@@ -1,3 +1,5 @@
+import services.logging_config
+
 import logging
 from typing import Dict, Any, List
 from services.parsers.pdf.parse_citi_cc_pdf import parse_citi_cc_pdf
