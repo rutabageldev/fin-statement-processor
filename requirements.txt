@@ -8,3 +8,4 @@ pre-commit
 python-dotenv
 pytest-cov
 uvicorn
+types-PyYAML
