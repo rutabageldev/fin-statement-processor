@@ -13,11 +13,19 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/aot/lists/*
 
+# Accept build argument to control dev dependency install
+ARG INSTALL_DEV=false
+
 # Copy only requirements first for caching
-COPY requirements.txt .
+COPY requirements.txt requirements-dev.txt./
 
 # Install Python dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+    if [ "$INSTALL_DEV" = "true" ]; then \
+        pip install -r requirements-dev.txt; \
+    else \
+        pip install -r requirements.txt; \
+    fi
 
 # Copy the rest of your code
 COPY . .
