@@ -19,9 +19,9 @@ def load_parser_config(config_name: str) -> dict:
             config = yaml.safe_load(f)
             logging.debug(f"✅ Successfully loaded config: {config_name}")
             return config or {}
-    # except yaml.YAMLError as e:
-    #    logging.exception(f"❌ YAML parsing error in config: {config_path}")
-    #    raise
+    except yaml.YAMLError as e:
+        logging.exception(f"❌ YAML parsing error in config: {config_path}")
+        raise
     except Exception as e:
         logging.exception(f"❌ Unexpected error loading config: {config_path}")
         raise
