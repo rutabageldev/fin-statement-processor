@@ -1,15 +1,6 @@
-black
 fastapi
-mypy
+uvicorn
+pydantic
 pandas
 pdfplumber
-pydantic
-pytest
-pre-commit
 python-dotenv
-pytest-cov
-uvicorn
-types-PyYAML
-flake8
-isort
-flake8-bugbear
