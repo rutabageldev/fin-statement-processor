@@ -1,7 +1,8 @@
 {
   "name": "fin-statement-processor-dev",
   "context": "..",
-  "dockerFile": "../Dockerfile",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "parser",
   "workspaceFolder": "/app",
   "runArgs": ["--env-file", ".env"],
   "customizations": {
@@ -12,7 +13,7 @@
       ]
     }
   },
-  "postCreateCommand": "pip install -r requirements.txt && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com'",
+  "postCreateCommand": "pre-commit install && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com'",
   "remoteUser": "root",
   "build": {
     "args": {
