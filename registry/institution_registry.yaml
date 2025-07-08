@@ -1,0 +1,6 @@
+citi:
+  name: Citi Bank
+  uuid: fc246844-a527-43f8-8e9d-83a7f0113034
+  enabled: true
+  supported_accounts:
+    - citi_cc
