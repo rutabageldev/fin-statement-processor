@@ -4,21 +4,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import services.logging_config
-
 import argparse
 import json
 import logging
 import uuid
 import os
-
-from services.parsers.dispatch_parser import (
-    parse_pdf,
-    parse_csv,
-)  # CSV to be added later
-from services.account_registry import SUPPORTED_ACCOUNTS
+from registry.loader import get_account_registry
+from services.parsers.dispatch_parser import parse_pdf, parse_csv
 
 
 def parse_args():
+    SUPPORTED_ACCOUNTS = get_account_registry()
+
     parser = argparse.ArgumentParser(description="Ledgerly Statement Parser CLI")
     parser.add_argument("--account", required=True, help="Account type (e.g., citi_cc)")
     parser.add_argument("--pdf", help="Path to PDF file")
