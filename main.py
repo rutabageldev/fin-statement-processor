@@ -60,7 +60,7 @@ def main():
 
         # Write result
         with open(output_path, "w") as f:
-            json.dump(results, f, indent=2)
+            json.dump(results, f, indent=2, default=str)
 
         logging.info(f"✅ Output written to {output_path}")
 

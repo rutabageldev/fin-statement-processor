@@ -4,9 +4,9 @@ import re
 from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, cast
-from uuid import UUID
 
 from models.statement import StatementData, StatementDetails
+from services.normalization import normalize_statement_data
 from ..parser_config_loader import load_parser_config
 from registry.loader import get_account_registry, get_institution_registry
 
@@ -21,9 +21,6 @@ TRANSFORM_REGISTRY = {
 
 
 def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
-    account_registry = get_account_registry
-    institution_registry = get_institution_registry
-
     try:
         with pdfplumber.open(BytesIO(file_bytes)) as pdf:
             statement_lines: List[str] = []
@@ -37,7 +34,18 @@ def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
 
             account_summary = extract_account_summary(statement_lines)
 
-            return account_summary
+            normalized_data = normalize_statement_data(
+                parsed_data=account_summary,
+                account_slug="citi_cc",
+                file_url=None,
+                uploaded_at=datetime.utcnow(),
+            )
+
+            return {
+                "parsed_data": account_summary,
+                "statement_data": normalized_data["statement_data"].model_dump(),
+                "statement_details": normalized_data["statement_details"].model_dump(),
+            }
 
     except Exception as e:
         logger.exception("❌ Failed to parse Citi CC PDF")
