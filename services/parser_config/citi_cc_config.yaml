@@ -8,9 +8,9 @@ meta:
     Config-driven parsing rules to extract data from Citi credit card statements
 
 account_summary_fields:
-  - name: "previous_balance"                      # Match the 'Previous balance' field and extract the dollar amount.
-    label_patterns: ["(?i)previous balance"]      # Case-insensitive math
-    value_pattern: "\\$[\\d,]+\\.\\d{2}"          # Matches $ followed by digits, optional comma, a decimal with 2 trailiing digits
+  - name: "previous_balance"
+    label_patterns: ["(?i)previous balance"]
+    value_pattern: "\\$[\\d,]+\\.\\d{2}"
     data_type: float
     optional: false
 

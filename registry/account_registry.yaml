@@ -6,5 +6,5 @@ citi_cc:
     csv: parse_citi_cc_csv.py
   metadata:
     account_type: credit
-    issuer: Citi
+    institution: citi
     enabled: true

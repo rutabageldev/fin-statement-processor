@@ -4,9 +4,12 @@ import re
 from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, cast
-from ..parser_config_loader import load_parser_config
+from uuid import UUID
 
-# Suppress noisy logs
+from models.statement import StatementData, StatementDetails
+from ..parser_config_loader import load_parser_config
+from registry.loader import get_account_registry, get_institution_registry
+
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
 logger = logging.getLogger(__name__)
@@ -18,6 +21,9 @@ TRANSFORM_REGISTRY = {
 
 
 def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
+    account_registry = get_account_registry
+    institution_registry = get_institution_registry
+
     try:
         with pdfplumber.open(BytesIO(file_bytes)) as pdf:
             statement_lines: List[str] = []
