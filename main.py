@@ -56,9 +56,12 @@ def main():
 
         if args.csv:
             logging.info(f"📈 Parsing CSV: {args.csv}")
-            statement_id_str = results["statement_data"]["id"]
-            statment_id = UUID(statement_id_str)
+            statement_id = results["statement_data"]["id"]
             results["transactions"] = parse_csv(args.account, args.csv, statement_id)
+
+        logging.debug(
+            f"🔍 Final output contents: {json.dumps(results, indent=2, default=str)}"
+        )
 
         # Write result
         with open(output_path, "w") as f:

@@ -35,6 +35,7 @@ def parse_csv(
     try:
         match account_name:
             case "citi_cc":
+                logging.debug(f"✅ Passing statement_id {statement_uuid} to CSV parser")
                 with open(csv_path, "r", encoding="utf-8") as f:
                     return parse_citi_cc_csv(f, statement_uuid)
             case _:
