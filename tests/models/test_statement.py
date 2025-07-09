@@ -1,0 +1,34 @@
+import pytest
+from uuid import uuid4
+from datetime import datetime
+from models.statement import StatementData
+
+
+def test_statement_data_from_dict_missing_field_raises():
+    data = {
+        "bill_period_end": "2025-06-30"
+        # 'bill_period_start' is missing
+    }
+
+    with pytest.raises(KeyError, match="bill_period_start"):
+        StatementData.from_dict(
+            data=data,
+            institution_id=uuid4(),
+            account_id=uuid4(),
+            file_url="s3://bucket/stmt.pdf",
+            uploaded_at=datetime(2025, 7, 1),
+        )
+
+
+def test_statement_data_from_dict_invalid_date_format_raises():
+    data = {
+        "bill_period_start": "30-06-2025",  # invalid format (should be ISO)
+        "bill_period_end": "2025-06-30",
+    }
+
+    with pytest.raises(ValueError):
+        StatementData.from_dict(
+            data=data,
+            institution_id=uuid4(),
+            account_id=uuid4(),
+        )

@@ -12,7 +12,7 @@ We implement tests in **five manageable phases** to progressively build confiden
 - Validate PDF parsing, normalization, and core model construction.
 - Establish fixtures and the testing framework.
 
-### **Phase 2: Parser and Service Logic**
+### COMPLETE **Phase 2: Parser and Service Logic**
 - Test edge cases in normalization and parsing.
 - Validate dispatch logic.
 - Add coverage for alternate parser types (e.g., CSV).
