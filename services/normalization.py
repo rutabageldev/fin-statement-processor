@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 from uuid import uuid4, UUID
 from datetime import datetime
 
-from models.statement import StatementData, StatementDetails
+from models import StatementData, StatementDetails, DebtDetails
 from registry.loader import get_account_registry, get_institution_registry
 
 
@@ -47,3 +47,25 @@ def normalize_statement_data(
         "statement_data": statement_data,
         "statement_details": statement_details,
     }
+
+
+def normalize_debt_details(
+    parsed_data: Dict[str, Any],
+    account_slug: str,
+    statement_id: UUID,
+) -> Dict[str, Any]:
+    account_registry = get_account_registry()
+
+    if account_slug not in account_registry:
+        raise ValueError(f"Unspoorted account slud: {account_slug}")
+
+    account_info = account_registry[account_slug]
+    account_uuid = UUID(account_info["uuid"])
+
+    debt_details = DebtDetails.from_dict(
+        data=parsed_data,
+        account_id=account_uuid,
+        statement_id=statement_id,
+    )
+
+    return {"debt_details": debt_details}

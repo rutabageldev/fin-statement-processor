@@ -5,10 +5,8 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, cast
 
-from models.statement import StatementData, StatementDetails
-from services.normalization import normalize_statement_data
+from services.normalization import normalize_debt_details, normalize_statement_data
 from ..parser_config_loader import load_parser_config
-from registry.loader import get_account_registry, get_institution_registry
 
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
@@ -34,17 +32,24 @@ def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
 
             account_summary = extract_account_summary(statement_lines)
 
-            normalized_data = normalize_statement_data(
+            statement_data = normalize_statement_data(
                 parsed_data=account_summary,
                 account_slug="citi_cc",
                 file_url=None,
                 uploaded_at=datetime.utcnow(),
             )
 
+            debt_data = normalize_debt_details(
+                parsed_data=account_summary,
+                account_slug="citi_cc",
+                statement_id=statement_data["statement_data"].id,
+            )
+
             return {
                 "parsed_data": account_summary,
-                "statement_data": normalized_data["statement_data"].model_dump(),
-                "statement_details": normalized_data["statement_details"].model_dump(),
+                "statement_data": statement_data["statement_data"].model_dump(),
+                "statement_details": statement_data["statement_details"].model_dump(),
+                "debt_details": debt_data["debt_details"].model_dump(),
             }
 
     except Exception as e:
