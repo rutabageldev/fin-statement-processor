@@ -28,9 +28,17 @@ def test_normalize_debt_details_happy_path(
     )
 
     # Assert
-    assert "debt_details" in result
-    assert isinstance(result["debt_details"], DebtDetails)
-    assert result["debt_details"].statement_id == statement_id
-    assert result["debt_details"].payment_due_date == date(2025, 6, 30)
-    assert result["debt_details"].min_payment_due == 35.00
-    assert result["debt_details"].payments == 500.00
+    debt = result["debt_details"]
+
+    assert isinstance(debt, DebtDetails)
+    assert isinstance(debt.id, UUID)
+    assert debt.account_id == UUID("11111111-1111-1111-1111-111111111111")
+    assert debt.statement_id == statement_id
+
+    # Field-level checks
+    assert debt.payments == 500.00
+    assert debt.min_payment_due == 35.00
+    assert debt.payment_due_date == date(2025, 6, 30)
+    assert debt.interest_rate == 0.21
+    assert debt.interest_paid == 10.00
+    assert debt.principal_paid == 490.00

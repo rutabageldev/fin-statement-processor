@@ -13,7 +13,7 @@ def sample_pdf_data_cc():
             "cash_advances": 0.00,
             "fees": 0.00,
             "interest_rate": 0.21,
-            "interest": 10.00,
+            "interest_paid": 10.00,
             "new_balance": 760.00,
             "min_payment_due": 35.00,
             "payment_due_date": "2025-06-30",
