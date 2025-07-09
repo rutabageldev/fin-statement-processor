@@ -22,7 +22,7 @@ TRANSFORM_REGISTRY = {
 }
 
 
-def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
+def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> Dict[str, Any]:
     try:
         with pdfplumber.open(BytesIO(file_bytes)) as pdf:
             statement_lines: List[str] = []
@@ -38,20 +38,20 @@ def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
 
             statement_data = normalize_statement_data(
                 parsed_data=account_summary,
-                account_slug="citi_cc",
+                account_slug=account_slug,
                 file_url=None,
                 uploaded_at=datetime.utcnow(),
             )
 
             debt_data = normalize_debt_details(
                 parsed_data=account_summary,
-                account_slug="citi_cc",
+                account_slug=account_slug,
                 statement_id=statement_data["statement_data"].id,
             )
 
             cc_data = normalize_cc_details(
                 parsed_data=account_summary,
-                account_slug="citi_cc",
+                account_slug=account_slug,
                 statement_id=statement_data["statement_data"].id,
             )
 
