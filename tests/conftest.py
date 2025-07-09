@@ -21,6 +21,8 @@ def sample_pdf_data_cc():
             "bill_period_end": "2025-06-30",
             "credit_limit": 5000.00,
             "available_credit": 4240.00,
+            "points_earned": 500,
+            "points_redeemed": 200,
         },
         "transactions": [
             {
