@@ -29,19 +29,19 @@ def parse_pdf(account_slug: str, pdf_path: str) -> dict:
 
 
 def parse_csv(
-    account_name: str, csv_path: str, statement_uuid: UUID
+    account_slug: str, csv_path: str, statement_uuid: UUID
 ) -> List[Dict[str, Any]]:
-    logging.debug(f"Dispatching CSV parser for account: {account_name}")
+    logging.debug(f"Dispatching CSV parser for account: {account_slug}")
     try:
-        match account_name:
+        match account_slug:
             case "citi_cc":
                 logging.debug(f"✅ Passing statement_id {statement_uuid} to CSV parser")
                 with open(csv_path, "r", encoding="utf-8") as f:
-                    return parse_citi_cc_csv(f, statement_uuid)
+                    return parse_citi_cc_csv(f, statement_uuid, account_slug)
             case _:
-                logging.error(f"No CSV parser available for account: {account_name}")
+                logging.error(f"No CSV parser available for account: {account_slug}")
                 raise NotImplementedError(
-                    f"No CSV parser implemented for account: {account_name}"
+                    f"No CSV parser implemented for account: {account_slug}"
                 )
     except FileNotFoundError:
         logging.exception(f"CSV file not found: {csv_path}")

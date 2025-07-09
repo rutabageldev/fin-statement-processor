@@ -8,7 +8,9 @@ from uuid import UUID
 logger = logging.getLogger(__name__)
 
 
-def parse_citi_cc_csv(csv_file: TextIO, statement_uuid: UUID) -> List[Dict[str, Any]]:
+def parse_citi_cc_csv(
+    csv_file: TextIO, statement_uuid: UUID, account_slug: str
+) -> List[Dict[str, Any]]:
     transactions = []
     reader = csv.DictReader(csv_file)
 
@@ -55,7 +57,7 @@ def parse_citi_cc_csv(csv_file: TextIO, statement_uuid: UUID) -> List[Dict[str, 
 
     normalized_transactions = normalize_transactions(
         parsed_data=transactions,
-        account_slug="citi_cc",
+        account_slug=account_slug,
         statement_id=statement_uuid,
     )
 
