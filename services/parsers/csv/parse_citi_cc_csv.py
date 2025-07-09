@@ -2,11 +2,13 @@ import csv
 import logging
 from datetime import datetime
 from typing import Any, Dict, List, TextIO
+from services.normalization import normalize_transactions
+from uuid import UUID
 
 logger = logging.getLogger(__name__)
 
 
-def parse_citi_cc_csv(csv_file: TextIO) -> List[Dict[str, Any]]:
+def parse_citi_cc_csv(csv_file: TextIO, statement_uuid: UUID) -> List[Dict[str, Any]]:
     transactions = []
     reader = csv.DictReader(csv_file)
 
@@ -51,5 +53,11 @@ def parse_citi_cc_csv(csv_file: TextIO) -> List[Dict[str, Any]]:
         except Exception as e:
             logger.warning(f"⚠️ Skipping row {row} due to error: {e}\nRow: {row}")
 
+    normalized_transactions = normalize_transactions(
+        parsed_data=transactions,
+        account_slug="citi_cc",
+        statement_id=statement_uuid,
+    )
+
     logger.info(f"✅ Parsed {len(transactions)} valid transactions from CSV.")
-    return transactions
+    return [txn.model_dump() for txn in normalized_transactions["transactions"]]

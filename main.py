@@ -7,7 +7,7 @@ import services.logging_config
 import argparse
 import json
 import logging
-import uuid
+from uuid import UUID, uuid4
 import os
 from registry.loader import get_account_registry
 from services.parsers.dispatch_parser import parse_pdf, parse_csv
@@ -42,7 +42,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    statement_id = str(uuid.uuid4())
+    statement_id = str(uuid4())
     output_dir = os.getenv("OUTPUT_DIR", "./output")
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, f"{statement_id}.json")
@@ -56,7 +56,9 @@ def main():
 
         if args.csv:
             logging.info(f"📈 Parsing CSV: {args.csv}")
-            results["transactions"] = parse_csv(args.account, args.csv)
+            statement_id_str = results["statement_data"]["id"]
+            statment_id = UUID(statement_id_str)
+            results["transactions"] = parse_csv(args.account, args.csv, statement_id)
 
         # Write result
         with open(output_path, "w") as f:

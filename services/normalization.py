@@ -1,10 +1,16 @@
 import logging
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 from uuid import uuid4, UUID
 from datetime import datetime
 
-from models import StatementData, StatementDetails, DebtDetails, CreditCardDetails
+from models import (
+    StatementData,
+    StatementDetails,
+    DebtDetails,
+    CreditCardDetails,
+    Transaction,
+)
 from registry.loader import get_account_registry, get_institution_registry
 
 
@@ -99,3 +105,36 @@ def normalize_cc_details(
     logging.info(f"✅ Credit card details normalized for statement_id: {statement_id}")
 
     return {"credit_card_details": cc_details}
+
+
+def normalize_transactions(
+    parsed_data: List[Dict[str, Any]],
+    account_slug: str,
+    statement_id: UUID,
+) -> Dict[str, List[Transaction]]:
+    logging.debug(
+        f"Normalizing transactions for account: {account_slug}, statement_id: {statement_id}"
+    )
+
+    account_uuid = get_account_uuid(account_slug)
+
+    transactions = []
+
+    for transaction in parsed_data:
+        try:
+            transaction = Transaction.from_dict(
+                data=transaction,
+                account_id=account_uuid,
+                statement_id=statement_id,
+            )
+            transactions.append(transaction)
+        except Exception as e:
+            logging.warning(
+                f"❌ Skipping invalid transaction row: {transaction} — Reason: {e}"
+            )
+
+    logging.info(
+        f"✅ {len(transactions)} transactions normalized for statement_id: {statement_id}"
+    )
+
+    return {"transactions": transactions}
