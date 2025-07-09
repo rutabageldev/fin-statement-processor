@@ -5,19 +5,19 @@ from services.parsers.pdf.parse_citi_cc_pdf import parse_citi_cc_pdf
 from services.parsers.csv.parse_citi_cc_csv import parse_citi_cc_csv
 
 
-def parse_pdf(account_name: str, pdf_path: str) -> dict:
+def parse_pdf(account_slug: str, pdf_path: str) -> dict:
     logging.debug(f"Dispatching PDF parser for account: {account_name}")
     try:
         with open(pdf_path, "rb") as f:
             file_bytes = f.read()
 
-        match account_name:
+        match account_slug:
             case "citi_cc":
-                return parse_citi_cc_pdf(file_bytes)
+                return parse_citi_cc_pdf(file_bytes, account_slug)
             case _:
-                logging.error(f"No PDF parser available for account: {account_name}")
+                logging.error(f"No PDF parser available for account: {account_slug}")
                 raise NotImplementedError(
-                    f"No PDF parser implemented for account: {account_name}"
+                    f"No PDF parser implemented for account: {account_slug}"
                 )
 
     except FileNotFoundError:
