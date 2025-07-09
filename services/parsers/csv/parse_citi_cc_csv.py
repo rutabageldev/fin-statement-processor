@@ -60,7 +60,7 @@ def parse_citi_cc_csv(csv_file: TextIO, statement_uuid: UUID) -> List[Dict[str, 
     )
 
     logger.info(f"✅ Parsed {len(transactions)} valid transactions from CSV.")
-    logger.info(
+    logger.debug(
         f"Returning {len(normalized_transactions['transactions'])} normalized transactions"
     )
     return [txn.model_dump() for txn in normalized_transactions["transactions"]]
