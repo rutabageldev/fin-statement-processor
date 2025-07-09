@@ -8,7 +8,7 @@ This folder contains all unit, edge case, and integration tests for the Ledgerly
 
 We implement tests in **five manageable phases** to progressively build confidence in the system while supporting rapid development and refactoring.
 
-### **Phase 1: Core Happy Path**
+### COMPLETE **Phase 1: Core Happy Path**
 - Validate PDF parsing, normalization, and core model construction.
 - Establish fixtures and the testing framework.
 
