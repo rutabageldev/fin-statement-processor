@@ -12,6 +12,7 @@ def sample_pdf_data_cc():
             "purchases": 250.00,
             "cash_advances": 0.00,
             "fees": 0.00,
+            "interest_rate": 0.21,
             "interest": 10.00,
             "new_balance": 760.00,
             "min_payment_due": 35.00,
@@ -49,8 +50,8 @@ def normalized_statement_data_cc():
         "debt_details": {
             "payment": 500.00,
             "min_payment_due": 35.00,
+            "interest_rate": 0.21,
             "payment_due_date": "2025-06-30",
-            "interest_rate": None,
             "interest_paid": 10.00,
             "principal_paid": 490.00,
         },
