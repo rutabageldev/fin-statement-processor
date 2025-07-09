@@ -5,7 +5,11 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any, Dict, List, Optional, cast
 
-from services.normalization import normalize_debt_details, normalize_statement_data
+from services.normalization import (
+    normalize_cc_details,
+    normalize_debt_details,
+    normalize_statement_data,
+)
 from ..parser_config_loader import load_parser_config
 
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
@@ -45,11 +49,17 @@ def parse_citi_cc_pdf(file_bytes: bytes) -> Dict[str, Any]:
                 statement_id=statement_data["statement_data"].id,
             )
 
+            cc_data = normalize_cc_details(
+                parsed_data=account_summary,
+                account_slug="citi_cc",
+                statement_id=statement_data["statement_data"].id,
+            )
+
             return {
-                "parsed_data": account_summary,
                 "statement_data": statement_data["statement_data"].model_dump(),
                 "statement_details": statement_data["statement_details"].model_dump(),
                 "debt_details": debt_data["debt_details"].model_dump(),
+                "credit_card_details": cc_data["credit_card_details"].model_dump(),
             }
 
     except Exception as e:

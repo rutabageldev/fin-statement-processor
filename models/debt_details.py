@@ -52,10 +52,25 @@ class CreditCardDetails(BaseModel):
     fees: float
     purchases: float
     credits: float
-    cc_id: Optional[UUID] = None
 
     @classmethod
     def from_dict(
         cls,
+        data: dict,
+        account_id: UUID,
+        statement_id: UUID,
+        cc_detail_id: Optional[UUID] = None,
     ) -> "CreditCardDetails":
-        return cls()
+        return cls(
+            id=cc_detail_id or uuid4(),
+            account_id=account_id,
+            statement_id=statement_id,
+            credit_limit=float(data["credit_limit"]),
+            available_credit=float(data["available_credit"]),
+            points_earned=int(data["points_earned"]),
+            points_redeemed=int(data["points_redeemed"]),
+            cash_advances=float(data["cash_advances"]),
+            fees=float(data["fees"]),
+            purchases=float(data["purchases"]),
+            credits=float(data["credits"]),
+        )
