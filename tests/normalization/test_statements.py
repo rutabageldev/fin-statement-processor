@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from uuid import UUID
 from unittest.mock import patch
 
@@ -25,24 +25,32 @@ def test_normalize_statement_data_happy_path(
         "citibank": {"uuid": "22222222-2222-2222-2222-222222222222"}
     }
 
+    file_url = "s3://bucket/file.pdf"
+    uploaded_at = datetime(2025, 7, 1)
+
     # Act
     result = normalize_statement_data(
         parsed_data=sample_pdf_data_cc["account_summary"],
         account_slug="citi_cc",
-        file_url="s3://bucket/file.pdf",
-        uploaded_at=datetime(25, 7, 1),
+        file_url=file_url,
+        uploaded_at=uploaded_at,
     )
 
     # Assert
-    assert "statement_data" in result
-    assert "statement_details" in result
-    assert isinstance(result["statement_data"], StatementData)
-    assert isinstance(result["statement_details"], StatementDetails)
+    statement = result["statement_data"]
+    details = result["statement_details"]
 
-    # Check some expected values
-    assert result["statement_data"].institution_id == UUID(
-        "22222222-2222-2222-2222-222222222222"
-    )
-    assert result["statement_data"].account_id == UUID(
-        "11111111-1111-1111-1111-111111111111"
-    )
+    assert isinstance(statement, StatementData)
+    assert isinstance(statement.id, UUID)
+    assert statement.institution_id == UUID("22222222-2222-2222-2222-222222222222")
+    assert statement.account_id == UUID("11111111-1111-1111-1111-111111111111")
+    assert statement.period_start == date(2025, 6, 1)
+    assert statement.period_end == date(2025, 6, 30)
+    assert statement.file_url == file_url
+    assert statement.uploaded_at == uploaded_at
+
+    assert isinstance(details, StatementDetails)
+    assert isinstance(details.id, UUID)
+    assert details.statement_id == statement.id
+    assert details.previous_balance == 1000.00
+    assert details.new_balance == 760.00
