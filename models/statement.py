@@ -9,8 +9,8 @@ class StatementData(BaseModel):
     id: UUID
     institution_id: UUID
     account_id: UUID
-    start_date: date
-    end_date: date
+    period_start: date
+    period_end: date
     file_url: Optional[str] = None
     uploaded_at: datetime
 
@@ -28,8 +28,8 @@ class StatementData(BaseModel):
             id=statement_id or uuid4(),
             institution_id=institution_id,
             account_id=account_id,
-            start_date=date.fromisoformat(data["bill_period_start"]),
-            end_date=date.fromisoformat(data["bill_period_end"]),
+            period_start=date.fromisoformat(data["bill_period_start"]),
+            period_end=date.fromisoformat(data["bill_period_end"]),
             file_url=file_url,
             uploaded_at=uploaded_at or datetime.utcnow(),
         )
