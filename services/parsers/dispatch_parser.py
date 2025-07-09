@@ -6,7 +6,7 @@ from services.parsers.csv.parse_citi_cc_csv import parse_citi_cc_csv
 
 
 def parse_pdf(account_slug: str, pdf_path: str) -> dict:
-    logging.debug(f"Dispatching PDF parser for account: {account_name}")
+    logging.debug(f"Dispatching PDF parser for account: {account_slug}")
     try:
         with open(pdf_path, "rb") as f:
             file_bytes = f.read()
