@@ -86,3 +86,75 @@ def test_transaction_missing_required_field_raises():
 
     with pytest.raises(KeyError):
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
+
+
+def test_transaction_missing_type():
+    data = {
+        "date": "2025-06-01",
+        "amount": 100.0,
+        "description": "Test",
+        "statement_id": uuid4(),
+        "account_id": uuid4(),
+    }
+    with pytest.raises(KeyError):
+        Transaction.from_dict(
+            data, statement_id=data["statement_id"], account_id=data["account_id"]
+        )
+
+
+def test_transaction_missing_amount():
+    data = {
+        "date": "2025-06-01",
+        "description": "Test",
+        "type": "debit",
+        "statement_id": uuid4(),
+        "account_id": uuid4(),
+    }
+    with pytest.raises(KeyError):
+        Transaction.from_dict(
+            data, statement_id=data["statement_id"], account_id=data["account_id"]
+        )
+
+
+def test_transaction_invalid_type_value():
+    data = {
+        "date": "2025-06-01",
+        "amount": 100.0,
+        "description": "Test",
+        "type": "other",  # Not allowed
+    }
+    with pytest.raises(ValueError):
+        Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
+
+
+def test_transaction_future_date_parses():
+    data = {
+        "date": "2125-01-01",
+        "amount": 100.0,
+        "description": "Future txn",
+        "type": "debit",
+    }
+    txn = Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
+    assert txn.date.isoformat() == "2125-01-01"
+
+
+def test_transaction_ancient_date_parses():
+    data = {
+        "date": "1925-01-01",
+        "amount": 100.0,
+        "description": "Ancient txn",
+        "type": "credit",
+    }
+    txn = Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
+    assert txn.date.isoformat() == "1925-01-01"
+
+
+def test_transaction_malformed_amount():
+    data = {
+        "date": "2025-06-01",
+        "amount": "25.00USD",
+        "description": "Bad amount",
+        "type": "debit",
+    }
+    with pytest.raises(ValueError):
+        Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
