@@ -1,6 +1,6 @@
 import pytest
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, timezone
 from models.statement import StatementData
 
 
@@ -64,3 +64,41 @@ def test_statement_data_uploaded_at_defaults():
         account_id=uuid4(),
     )
     assert isinstance(result.uploaded_at, datetime)
+
+
+def test_statement_data_missing_dates():
+    data = {}
+    with pytest.raises(KeyError):
+        StatementData.from_dict(
+            data=data,
+            institution_id=uuid4(),
+            account_id=uuid4(),
+            uploaded_at=datetime.now(timezone.utc),
+        )
+
+
+def test_statement_data_extra_fields():
+    data = {
+        "bill_period_start": "2025-06-01",
+        "bill_period_end": "2025-06-30",
+        "unexpected_field": "extra",
+    }
+    result = StatementData.from_dict(
+        data=data,
+        institution_id=uuid4(),
+        account_id=uuid4(),
+        uploaded_at=datetime.now(timezone.utc),
+    )
+    assert result.period_start.isoformat() == "2025-06-01"
+    assert result.period_end.isoformat() == "2025-06-30"
+
+
+def test_statement_data_null_dates():
+    data = {"bill_period_start": None, "bill_period_end": None}
+    with pytest.raises(TypeError):
+        StatementData.from_dict(
+            data=data,
+            institution_id=uuid4(),
+            account_id=uuid4(),
+            uploaded_at=datetime.now(timezone.utc),
+        )

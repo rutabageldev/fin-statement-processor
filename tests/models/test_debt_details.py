@@ -75,3 +75,43 @@ def test_debt_details_principal_rounding():
 
     obj = DebtDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
     assert round(obj.principal_paid, 2) == round(90.0, 2)
+
+
+def test_debt_details_missing_optional_id_generates_uuid():
+    data = {
+        "min_payment_due": 50.0,
+        "payment_due_date": "2025-07-15",
+        "interest_rate": 0.2,
+        "interest_paid": 5.0,
+        "payments": 100.0,
+    }
+
+    obj = DebtDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
+    assert isinstance(obj.id, uuid4().__class__)
+
+
+def test_debt_details_interest_exceeds_payments_results_in_negative_principal():
+    data = {
+        "min_payment_due": 35.0,
+        "payment_due_date": "2025-07-15",
+        "interest_rate": 0.25,
+        "interest_paid": 150.0,
+        "payments": 100.0,
+    }
+
+    obj = DebtDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
+    assert obj.principal_paid == -50.0
+
+
+def test_debt_details_zero_payment():
+    data = {
+        "min_payment_due": 0.0,
+        "payment_due_date": "2025-07-01",
+        "interest_rate": 0.0,
+        "interest_paid": 0.0,
+        "payments": 0.0,
+    }
+
+    obj = DebtDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
+    assert obj.payments == 0.0
+    assert obj.principal_paid == 0.0
