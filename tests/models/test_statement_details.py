@@ -26,3 +26,14 @@ def test_statement_details_from_dict_invalid_balance_type():
             data=data,
             statement_id=uuid4(),
         )
+
+
+def test_statement_details_missing_balance_fields():
+    with pytest.raises(KeyError):
+        StatementDetails.from_dict(data={}, statement_id=uuid4())
+
+
+def test_statement_details_invalid_balance_type():
+    bad_data = {"previous_balance": "one thousand", "new_balance": 750.0}
+    with pytest.raises(ValueError):
+        StatementDetails.from_dict(data=bad_data, statement_id=uuid4())

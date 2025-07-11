@@ -32,3 +32,35 @@ def test_statement_data_from_dict_invalid_date_format_raises():
             institution_id=uuid4(),
             account_id=uuid4(),
         )
+
+
+def test_statement_data_missing_fields():
+    with pytest.raises(KeyError):
+        StatementData.from_dict(
+            data={},  # completely empty
+            institution_id=uuid4(),
+            account_id=uuid4(),
+        )
+
+
+def test_statement_data_invalid_date_format():
+    bad_data = {
+        "bill_period_start": "01-2025-06",  # wrong format
+        "bill_period_end": "2025-06-30",
+    }
+    with pytest.raises(ValueError):
+        StatementData.from_dict(
+            data=bad_data,
+            institution_id=uuid4(),
+            account_id=uuid4(),
+        )
+
+
+def test_statement_data_uploaded_at_defaults():
+    data = {"bill_period_start": "2025-06-01", "bill_period_end": "2025-06-30"}
+    result = StatementData.from_dict(
+        data=data,
+        institution_id=uuid4(),
+        account_id=uuid4(),
+    )
+    assert isinstance(result.uploaded_at, datetime)

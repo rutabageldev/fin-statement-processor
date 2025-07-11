@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import UUID, uuid4
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 
 class StatementData(BaseModel):
@@ -31,7 +31,7 @@ class StatementData(BaseModel):
             period_start=date.fromisoformat(data["bill_period_start"]),
             period_end=date.fromisoformat(data["bill_period_end"]),
             file_url=file_url,
-            uploaded_at=uploaded_at or datetime.utcnow(),
+            uploaded_at=uploaded_at or datetime.now(timezone.utc),
         )
 
 
