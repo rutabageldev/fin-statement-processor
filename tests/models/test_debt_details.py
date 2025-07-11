@@ -90,28 +90,45 @@ def test_debt_details_missing_optional_id_generates_uuid():
     assert isinstance(obj.id, uuid4().__class__)
 
 
-def test_debt_details_interest_exceeds_payments_results_in_negative_principal():
+def test_debt_details_payment_less_than_interest():
+    """Ensure principal_paid is negative if interest > payments"""
     data = {
-        "min_payment_due": 35.0,
-        "payment_due_date": "2025-07-15",
-        "interest_rate": 0.25,
-        "interest_paid": 150.0,
-        "payments": 100.0,
+        "payments": 50.00,
+        "interest_paid": 75.00,
+        "min_payment_due": 35.00,
+        "payment_due_date": "2025-06-30",
+        "interest_rate": 0.21,
     }
 
-    obj = DebtDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
-    assert obj.principal_paid == -50.0
+    result = DebtDetails.from_dict(
+        data=data,
+        account_id=uuid4(),
+        statement_id=uuid4(),
+    )
+
+    assert result.payments == 50.00
+    assert result.interest_paid == 75.00
+    assert result.principal_paid == -25.00
 
 
-def test_debt_details_zero_payment():
+def test_debt_details_all_zero_values():
+    """Validate edge case with all zero debt-related values"""
     data = {
-        "min_payment_due": 0.0,
-        "payment_due_date": "2025-07-01",
-        "interest_rate": 0.0,
-        "interest_paid": 0.0,
-        "payments": 0.0,
+        "payments": 0.00,
+        "interest_paid": 0.00,
+        "min_payment_due": 0.00,
+        "payment_due_date": "2025-06-30",
+        "interest_rate": 0.00,
     }
 
-    obj = DebtDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
-    assert obj.payments == 0.0
-    assert obj.principal_paid == 0.0
+    result = DebtDetails.from_dict(
+        data=data,
+        account_id=uuid4(),
+        statement_id=uuid4(),
+    )
+
+    assert result.payments == 0.00
+    assert result.interest_paid == 0.00
+    assert result.principal_paid == 0.00
+    assert result.min_payment_due == 0.00
+    assert result.interest_rate == 0.00
