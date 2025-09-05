@@ -9,7 +9,12 @@ services:
     container_name: fin-parser-dev
     volumes:
       - .:/workspaces/fin-statement-processor
+      # WSL SSH key mounting - mount from Windows user profile
+      - ${USERPROFILE}/.ssh:/root/.ssh:ro
     env_file:
       - .env
     working_dir: /workspaces/fin-statement-processor
+    environment:
+      # Disable SSH agent forwarding to avoid WSL issues
+      - SSH_AUTH_SOCK=
     command: ["bash", "-c", "while true; do sleep 60; done"]
