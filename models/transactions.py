@@ -1,8 +1,10 @@
 # models/transactions.py
-from pydantic import BaseModel
-from typing import Optional, Literal
-from uuid import UUID, uuid4
 from datetime import date
+from typing import Literal
+from uuid import UUID
+from uuid import uuid4
+
+from pydantic import BaseModel
 
 
 class Transaction(BaseModel):
@@ -12,8 +14,8 @@ class Transaction(BaseModel):
     date: date
     amount: float
     description: str
-    custom_description: Optional[str] = None
-    category: Optional[str] = None
+    custom_description: str | None = None
+    category: str | None = None
     type: Literal["debit", "credit", "payment", "refund"]
 
     @classmethod
@@ -22,7 +24,7 @@ class Transaction(BaseModel):
         data: dict,
         statement_id: UUID,
         account_id: UUID,
-        transaction_id: Optional[UUID] = None,
+        transaction_id: UUID | None = None,
     ) -> "Transaction":
         return cls(
             id=transaction_id or uuid4(),

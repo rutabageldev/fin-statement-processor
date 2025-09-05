@@ -2,21 +2,40 @@
   "name": "fin-statement-processor-dev",
   "dockerComposeFile": "../docker-compose.yaml",
   "service": "parser",
-  "workspaceFolder": "/app",
+  "workspaceFolder": "/workspaces/fin-statement-processor",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "git config --global --add safe.directory /workspaces/fin-statement-processor && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com' && pre-commit install",
+  "postStartCommand": "echo 'Python interpreter: ' && which python && python --version",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
-        "ms-python.vscode-pylance"
-      ]
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-python.mypy-type-checker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.terminal.activateEnvironment": false,
+        "python.pythonPath": "/usr/local/bin/python",
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.extraPaths": ["/workspaces/fin-statement-processor"],
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+          },
+          "editor.formatOnSave": true
+        },
+        "python.linting.enabled": false,
+        "python.linting.flake8Enabled": false,
+        "python.linting.pylintEnabled": false,
+        "python.formatting.provider": "none",
+        "python.linting.mypyEnabled": false,
+        "mypy-type-checker.args": ["--strict", "--ignore-missing-imports"]
+      }
     }
   },
-  "postCreateCommand": "pre-commit install && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com'",
-  "remoteUser": "root",
-  "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
-  ],
-  "remoteEnv": {
-    "GIT_SSH_COMMAND": "ssh -i /home/vscode/.ssh/id_ed25519"
-  }
+  "remoteUser": "root"
 }

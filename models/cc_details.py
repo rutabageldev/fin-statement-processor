@@ -1,6 +1,7 @@
+from uuid import UUID
+from uuid import uuid4
+
 from pydantic import BaseModel
-from typing import Optional
-from uuid import UUID, uuid4
 
 
 class CreditCardDetails(BaseModel):
@@ -22,7 +23,7 @@ class CreditCardDetails(BaseModel):
         data: dict,
         account_id: UUID,
         statement_id: UUID,
-        cc_detail_id: Optional[UUID] = None,
+        cc_detail_id: UUID | None = None,
     ) -> "CreditCardDetails":
         return cls(
             id=cc_detail_id or uuid4(),

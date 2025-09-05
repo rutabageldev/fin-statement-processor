@@ -1,0 +1,167 @@
+# Ruff configuration
+target-version = "py312"
+line-length = 88
+indent-width = 4
+
+[lint]
+# Enable comprehensive rule sets
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "D",    # pydocstyle
+    "UP",   # pyupgrade
+    "YTT",  # flake8-2020
+    "ANN",  # flake8-annotations
+    "ASYNC", # flake8-async
+    "S",    # flake8-bandit (security)
+    "BLE",  # flake8-blind-except
+    "FBT",  # flake8-boolean-trap
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "COM",  # flake8-commas
+    "CPY",  # flake8-copyright
+    "C4",   # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "T10",  # flake8-debugger
+    "DJ",   # flake8-django
+    "EM",   # flake8-errmsg
+    "EXE",  # flake8-executable
+    "FA",   # flake8-future-annotations
+    "ISC",  # flake8-implicit-str-concat
+    "ICN",  # flake8-import-conventions
+    "G",    # flake8-logging-format
+    "INP",  # flake8-no-pep420
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "PYI",  # flake8-pyi
+    "PT",   # flake8-pytest-style
+    "Q",    # flake8-quotes
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SLOT", # flake8-slots
+    "SIM",  # flake8-simplify
+    "TID",  # flake8-tidy-imports
+    "TCH",  # flake8-type-checking
+    "INT",  # flake8-gettext
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "TD",   # flake8-todos
+    "FIX",  # flake8-fixme
+    "ERA",  # eradicate
+    "PD",   # pandas-vet
+    "PGH",  # pygrep-hooks
+    "PL",   # Pylint
+    "TRY",  # tryceratops
+    "FLY",  # flynt
+    "NPY",  # NumPy-specific rules
+    "PERF", # Perflint
+    "FURB", # refurb
+    "LOG",  # flake8-logging
+    "RUF",  # Ruff-specific rules
+]
+
+ignore = [
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "ANN101",  # Missing type annotation for self in method
+    "ANN102",  # Missing type annotation for cls in classmethod
+    "COM812",  # Trailing comma missing (conflicts with formatter)
+    "ISC001",  # Implicit string concatenation (conflicts with formatter)
+    "TD002",   # Missing author in TODO
+    "TD003",   # Missing issue link in TODO
+    "FIX002",  # Line contains TODO
+    "PLR0913", # Too many arguments in function definition
+    "TRY003",  # Avoid specifying long messages outside the exception class
+    "EM102",   # Exception must not use an f-string literal
+    "EM101",   # Exception must not use a string literal
+    "G004",    # Logging statement uses f-string
+    "LOG015",  # Call on root logger
+    "ARG001",  # Unused function argument
+    "F841",    # Local variable assigned to but never used
+    "B017",    # Do not assert blind exception
+    "PT011",   # pytest.raises() is too broad
+    "DTZ001",  # datetime() called without a tzinfo argument
+    "DTZ007",  # Naive datetime constructed using strptime() without %z
+    "PGH003",  # Use specific rule codes when ignoring type issues
+    "E501",    # Line too long (handled by formatter)
+    "PLW2901", # for loop variable overwritten by assignment target
+    "BLE001",  # Do not catch blind exception: `Exception`
+    "INP001",  # File is part of implicit namespace package. Add __init__.py
+    "PTH103",  # os.makedirs() should be replaced by Path.mkdir()
+    "PTH118",  # os.path.join() should be replaced by Path
+    "PTH120",  # os.path.dirname() should be replaced by Path.parent
+    "PTH123",  # open() should be replaced by Path.open()
+    "RUF012",  # Mutable class attributes should be annotated with ClassVar
+    "ANN001",  # Missing type annotation for function argument
+    "ANN201",  # Missing return type annotation for public function
+    "TRY301",  # Abstract raise to an inner function
+    "TRY401",  # Redundant exception object included in logging.exception call
+    "TID252",  # Prefer absolute imports over relative imports from parent modules
+    "DTZ003",  # datetime.datetime.utcnow() used
+    "PLR0911", # Too many return statements
+    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",    # Use of assert detected
+    "D",       # pydocstyle
+    "ANN",     # flake8-annotations
+    "PLR2004", # Magic value used in comparison
+]
+"**/__init__.py" = ["F401"]  # Unused imports in __init__.py
+
+[lint.isort]
+known-first-party = ["models", "services", "registry"]
+force-single-line = true
+lines-after-imports = 2
+
+[lint.pydocstyle]
+convention = "google"
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

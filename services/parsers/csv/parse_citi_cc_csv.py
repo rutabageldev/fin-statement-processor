@@ -1,16 +1,19 @@
 import csv
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, TextIO
-from services.normalization import normalize_transactions
+from typing import Any
+from typing import TextIO
 from uuid import UUID
+
+from services.normalization import normalize_transactions
+
 
 logger = logging.getLogger(__name__)
 
 
 def parse_citi_cc_csv(
     csv_file: TextIO, statement_uuid: UUID, account_slug: str
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     transactions = []
     reader = csv.DictReader(csv_file)
 

@@ -1,7 +1,9 @@
-from uuid import UUID, uuid4
 from unittest.mock import patch
-from services.normalization import normalize_cc_details
+from uuid import UUID
+from uuid import uuid4
+
 from models.cc_details import CreditCardDetails
+from services.normalization import normalize_cc_details
 
 
 @patch("services.normalization.get_account_registry")

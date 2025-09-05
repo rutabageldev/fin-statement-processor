@@ -1,8 +1,11 @@
+from unittest.mock import mock_open
+from unittest.mock import patch
 from uuid import uuid4
-from unittest.mock import patch, mock_open
+
 import pytest
 
-from services.parsers.dispatch_parser import parse_pdf, parse_csv
+from services.parsers.dispatch_parser import parse_csv
+from services.parsers.dispatch_parser import parse_pdf
 
 
 @patch("services.parsers.dispatch_parser.parse_citi_cc_pdf")

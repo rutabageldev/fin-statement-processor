@@ -1,17 +1,16 @@
 import logging
-
-from typing import Any, Dict, Optional, List
-from uuid import uuid4, UUID
 from datetime import datetime
+from typing import Any
+from uuid import UUID
+from uuid import uuid4
 
-from models import (
-    StatementData,
-    StatementDetails,
-    DebtDetails,
-    CreditCardDetails,
-    Transaction,
-)
-from registry.loader import get_account_registry, get_institution_registry
+from models import CreditCardDetails
+from models import DebtDetails
+from models import StatementData
+from models import StatementDetails
+from models import Transaction
+from registry.loader import get_account_registry
+from registry.loader import get_institution_registry
 
 
 def get_account_uuid(account_slug: str) -> UUID:
@@ -22,11 +21,11 @@ def get_account_uuid(account_slug: str) -> UUID:
 
 
 def normalize_statement_data(
-    parsed_data: Dict[str, Any],
+    parsed_data: dict[str, Any],
     account_slug: str,
-    file_url: Optional[str] = None,
-    uploaded_at: Optional[datetime] = None,
-) -> Dict[str, Any]:
+    file_url: str | None = None,
+    uploaded_at: datetime | None = None,
+) -> dict[str, Any]:
     logging.debug(f"Normalizing statement data for account: {account_slug}")
     account_registry = get_account_registry()
     institution_registry = get_institution_registry()
@@ -64,10 +63,10 @@ def normalize_statement_data(
 
 
 def normalize_debt_details(
-    parsed_data: Dict[str, Any],
+    parsed_data: dict[str, Any],
     account_slug: str,
     statement_id: UUID,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     logging.debug(
         f"Normalizing debt details for account: {account_slug}, statement_id: {statement_id}"
     )
@@ -86,10 +85,10 @@ def normalize_debt_details(
 
 
 def normalize_cc_details(
-    parsed_data: Dict[str, Any],
+    parsed_data: dict[str, Any],
     account_slug: str,
     statement_id: UUID,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     logging.debug(
         f"Normalizing credit card details for account: {account_slug}, statement_id: {statement_id}"
     )
@@ -108,10 +107,10 @@ def normalize_cc_details(
 
 
 def normalize_transactions(
-    parsed_data: List[Dict[str, Any]],
+    parsed_data: list[dict[str, Any]],
     account_slug: str,
     statement_id: UUID,
-) -> Dict[str, List[Transaction]]:
+) -> dict[str, list[Transaction]]:
     logging.debug(
         f"Normalizing transactions for account: {account_slug}, statement_id: {statement_id}"
     )

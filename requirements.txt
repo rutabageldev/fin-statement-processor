@@ -1,6 +1,6 @@
 fastapi
-uvicorn
-pydantic
 pandas
 pdfplumber
+pydantic
 python-dotenv
+uvicorn

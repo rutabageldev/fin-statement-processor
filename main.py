@@ -1,20 +1,28 @@
-# Test Command: python main.py --account citi_cc --pdf ./tests/data/test-statement_citi-cc.pdf --csv ./tests/data/test-transactions_citi-cc.csv
-from dotenv import load_dotenv
+#!/usr/bin/env python3
+"""Ledgerly Statement Parser CLI."""
 
-load_dotenv()
-
-import services.logging_config
 import argparse
 import json
 import logging
-from uuid import UUID, uuid4
 import os
+from pathlib import Path
+from uuid import uuid4
+
+from dotenv import load_dotenv
+
 from registry.loader import get_account_registry
-from services.parsers.dispatch_parser import parse_pdf, parse_csv
+from services.parsers.dispatch_parser import parse_csv
+from services.parsers.dispatch_parser import parse_pdf
 
 
-def parse_args():
-    SUPPORTED_ACCOUNTS = get_account_registry()
+load_dotenv()
+
+logger = logging.getLogger(__name__)
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
+    supported_accounts = get_account_registry()
 
     parser = argparse.ArgumentParser(description="Ledgerly Statement Parser CLI")
     parser.add_argument("--account", required=True, help="Account type (e.g., citi_cc)")
@@ -23,57 +31,60 @@ def parse_args():
 
     try:
         args = parser.parse_args()
-    except Exception as e:
-        logging.exception("❌ Failed to parse command-line arguments")
+    except Exception:
+        logger.exception("❌ Failed to parse command-line arguments")
         raise
 
-    if args.account not in SUPPORTED_ACCOUNTS:
-        logging.error(
-            f"Unsupported account: '{args.account}'. Supported accounts: {', '.join(SUPPORTED_ACCOUNTS.keys())}"
+    if args.account not in supported_accounts:
+        supported_list = ", ".join(supported_accounts.keys())
+        logger.error(
+            "Unsupported account: '%s'. Supported accounts: %s",
+            args.account,
+            supported_list,
         )
         parser.error("Unsupported account type")
 
     if not args.pdf and not args.csv:
-        logging.error("No input file provided.")
+        logger.error("No input file provided.")
         parser.error("You must provide at least one of --pdf or --csv")
 
     return args
 
 
-def main():
+def main() -> None:
+    """Main function to parse financial statements."""
     args = parse_args()
     statement_id = str(uuid4())
-    output_dir = os.getenv("OUTPUT_DIR", "./output")
-    os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, f"{statement_id}.json")
+    output_dir = Path(os.getenv("OUTPUT_DIR", "./output"))
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"{statement_id}.json"
 
     results = {}
 
     try:
         if args.pdf:
-            logging.info(f"📄 Parsing PDF: {args.pdf}")
+            logger.info("📄 Parsing PDF: %s", args.pdf)
             results.update(parse_pdf(args.account, args.pdf))
 
         if args.csv:
-            logging.info(f"📈 Parsing CSV: {args.csv}")
+            logger.info("📈 Parsing CSV: %s", args.csv)
             statement_id = results["statement_data"]["id"]
             results["transactions"] = parse_csv(args.account, args.csv, statement_id)
 
-        logging.debug(
-            f"🔍 Final output contents: {json.dumps(results, indent=2, default=str)}"
-        )
+        debug_output = json.dumps(results, indent=2, default=str)
+        logger.debug("🔍 Final output contents: %s", debug_output)
 
         # Write result
-        with open(output_path, "w") as f:
+        with output_path.open("w") as f:
             json.dump(results, f, indent=2, default=str)
 
-        logging.info(f"✅ Output written to {output_path}")
+        logger.info("✅ Output written to %s", output_path)
 
-    except Exception as e:
-        logging.exception(
-            f"❌ Unexpected error while processing statement {statement_id}"
+    except Exception:
+        logger.exception(
+            "❌ Unexpected error while processing statement %s", statement_id
         )
-        # Optional: write structured error file to output/errors/{statement_id}.json here
+        # Optional: write structured error file to output/errors/{statement_id}.json
 
 
 if __name__ == "__main__":

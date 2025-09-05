@@ -1,6 +1,9 @@
-import pytest
+from datetime import UTC
+from datetime import datetime
 from uuid import uuid4
-from datetime import datetime, timezone
+
+import pytest
+
 from models.statement import StatementData
 
 
@@ -73,7 +76,7 @@ def test_statement_data_missing_dates():
             data=data,
             institution_id=uuid4(),
             account_id=uuid4(),
-            uploaded_at=datetime.now(timezone.utc),
+            uploaded_at=datetime.now(UTC),
         )
 
 
@@ -87,7 +90,7 @@ def test_statement_data_extra_fields():
         data=data,
         institution_id=uuid4(),
         account_id=uuid4(),
-        uploaded_at=datetime.now(timezone.utc),
+        uploaded_at=datetime.now(UTC),
     )
     assert result.period_start.isoformat() == "2025-06-01"
     assert result.period_end.isoformat() == "2025-06-30"
@@ -100,5 +103,5 @@ def test_statement_data_null_dates():
             data=data,
             institution_id=uuid4(),
             account_id=uuid4(),
-            uploaded_at=datetime.now(timezone.utc),
+            uploaded_at=datetime.now(UTC),
         )

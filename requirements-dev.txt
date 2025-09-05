@@ -1,18 +1,20 @@
 -r requirements.txt
 
-# Testing
-pytest
-pytest-cov
-
-# Linting & formatting
-black
-flake8
-flake8-bugbear
-isort
+# Security scanning
+bandit  # Security vulnerability scanner
 
 # Typing
 mypy
-types-PyYAML
 
 # Git hook automation
 pre-commit
+
+# Testing
+pytest
+pytest-cov
+pytest-xdist  # Parallel testing
+
+# Linting & formatting (modern approach)
+ruff  # Replaces black, flake8, isort, and more
+safety  # Dependency vulnerability scanner
+types-PyYAML

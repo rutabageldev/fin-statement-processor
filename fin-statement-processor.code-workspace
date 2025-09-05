@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"name": "fin-statement-processor",
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.defaultInterpreterPath": "/usr/local/bin/python",
+		"python.terminal.activateEnvironment": false,
+		"files.exclude": {
+			"**/__pycache__": true,
+			"**/*.pyc": true,
+			".coverage": true,
+			".pytest_cache": true,
+			".mypy_cache": true
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-python.python",
+			"ms-python.vscode-pylance",
+			"ms-python.black-formatter",
+			"ms-python.flake8",
+			"ms-python.isort"
+		]
+	}
+}

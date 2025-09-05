@@ -1,8 +1,10 @@
 from datetime import date
-from uuid import UUID, uuid4
 from unittest.mock import patch
-from services.normalization import normalize_debt_details
+from uuid import UUID
+from uuid import uuid4
+
 from models.debt_details import DebtDetails
+from services.normalization import normalize_debt_details
 
 
 @patch("services.normalization.get_account_registry")

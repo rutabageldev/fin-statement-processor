@@ -1,16 +1,18 @@
 import logging
-import pdfplumber
 import re
 from datetime import datetime
 from io import BytesIO
-from typing import Any, Dict, List, Optional, cast
+from typing import Any
+from typing import cast
 
-from services.normalization import (
-    normalize_cc_details,
-    normalize_debt_details,
-    normalize_statement_data,
-)
+import pdfplumber
+
+from services.normalization import normalize_cc_details
+from services.normalization import normalize_debt_details
+from services.normalization import normalize_statement_data
+
 from ..parser_config_loader import load_parser_config
+
 
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
@@ -22,10 +24,10 @@ TRANSFORM_REGISTRY = {
 }
 
 
-def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> Dict[str, Any]:
+def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> dict[str, Any]:
     try:
         with pdfplumber.open(BytesIO(file_bytes)) as pdf:
-            statement_lines: List[str] = []
+            statement_lines: list[str] = []
 
             for page in pdf.pages:
                 raw_text = page.extract_text()
@@ -62,15 +64,15 @@ def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> Dict[str, Any]:
                 "credit_card_details": cc_data["credit_card_details"].model_dump(),
             }
 
-    except Exception as e:
+    except Exception:
         logger.exception("❌ Failed to parse Citi CC PDF")
         raise
 
 
-def extract_account_summary(statement_lines: List[str]) -> Dict[str, Any]:
+def extract_account_summary(statement_lines: list[str]) -> dict[str, Any]:
     config = load_parser_config("citi_cc")
     summary_fields = config.get("account_summary_fields", [])
-    summary_data: Dict[str, Any] = {}
+    summary_data: dict[str, Any] = {}
 
     for field in summary_fields:
         try:
@@ -91,12 +93,12 @@ def extract_account_summary(statement_lines: List[str]) -> Dict[str, Any]:
 
 
 def extract_field_value(
-    lines: List[str],
-    label_patterns: List[str],
+    lines: list[str],
+    label_patterns: list[str],
     value_pattern: str,
     data_type: str = "string",
     field_name: str = "unknown",
-    transform: Optional[str] = None,
+    transform: str | None = None,
 ) -> Any | None:
     for line in lines:
         if any(re.search(label, line) for label in label_patterns):
@@ -118,7 +120,7 @@ def extract_field_value(
                     if transform in TRANSFORM_REGISTRY
                     else raw_val
                 )
-                transformed_val = cast(str | float | int, transformed_val)
+                transformed_val = cast("str | float | int", transformed_val)
             except ValueError:
                 logger.warning(
                     f"Could not apply transform '{transform}' to value '{raw_val}'"

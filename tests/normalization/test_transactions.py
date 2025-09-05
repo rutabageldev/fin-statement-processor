@@ -1,8 +1,10 @@
-from uuid import UUID, uuid4
 from datetime import date
 from unittest.mock import patch
-from services.normalization import normalize_transactions
+from uuid import UUID
+from uuid import uuid4
+
 from models.transactions import Transaction
+from services.normalization import normalize_transactions
 
 
 @patch("services.normalization.get_account_registry")

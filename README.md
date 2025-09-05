@@ -14,6 +14,7 @@ This template provides a clean, minimal starting point for new Python projects.
 ```bash
 bash scripts/setup-venv.sh
 ```
+
 ---
 
 ### 📄 `.gitignore`

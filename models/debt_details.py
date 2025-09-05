@@ -1,8 +1,9 @@
 # models/debt_details.py
+from datetime import date
+from uuid import UUID
+from uuid import uuid4
+
 from pydantic import BaseModel
-from typing import Optional
-from uuid import UUID, uuid4
-from datetime import datetime, date
 
 
 class DebtDetails(BaseModel):
@@ -22,7 +23,7 @@ class DebtDetails(BaseModel):
         data: dict,
         account_id: UUID,
         statement_id: UUID,
-        debt_detail_id: Optional[UUID] = None,
+        debt_detail_id: UUID | None = None,
     ) -> "DebtDetails":
         payments = data.get("payments", 0.0)
         interest_paid = data.get("interest_paid", 0.0)

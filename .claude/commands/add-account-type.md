@@ -7,6 +7,7 @@ Usage: `/add-account-type [account_name]`
 Example: `/add-account-type chase_cc`
 
 This will:
+
 1. Create a new parser class in services/parsers/
 2. Add the account to the registry
 3. Create test files and data

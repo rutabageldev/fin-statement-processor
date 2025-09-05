@@ -1,9 +1,11 @@
-from datetime import datetime, date
-from uuid import UUID
+from datetime import date
+from datetime import datetime
 from unittest.mock import patch
+from uuid import UUID
 
+from models.statement import StatementData
+from models.statement import StatementDetails
 from services.normalization import normalize_statement_data
-from models.statement import StatementData, StatementDetails
 
 
 @patch("services.normalization.get_account_registry")

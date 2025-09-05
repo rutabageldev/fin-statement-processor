@@ -1,6 +1,8 @@
-import pytest
 import types
 from pathlib import Path
+
+import pytest
+
 from services.parsers import parser_config_loader
 
 

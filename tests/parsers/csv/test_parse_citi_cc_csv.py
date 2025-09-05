@@ -1,7 +1,9 @@
 from io import StringIO
 from pathlib import Path
 from uuid import uuid4
+
 from services.parsers.csv.parse_citi_cc_csv import parse_citi_cc_csv
+
 
 statement_uuid = uuid4()
 account_slug = "citi_cc"

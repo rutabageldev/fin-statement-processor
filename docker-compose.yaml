@@ -1,15 +1,15 @@
-version: '3.9'
-
 services:
   parser:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
       args:
         INSTALL_DEV: "true"
     container_name: fin-parser-dev
     volumes:
-      - .:/app
+      - .:/workspaces/fin-statement-processor
     env_file:
       - .env
-    working_dir: /app
+    working_dir: /workspaces/fin-statement-processor
+    command: ["bash", "-c", "while true; do sleep 60; done"]
