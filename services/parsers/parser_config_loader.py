@@ -16,7 +16,7 @@ def load_parser_config(config_name: str) -> dict:
         raise FileNotFoundError(f"Config file not found: {config_path}")
 
     try:
-        with open(config_path, encoding="utf-8") as f:
+        with config_path.open(encoding="utf-8") as f:
             config = yaml.safe_load(f)
             logging.debug(f"✅ Successfully loaded config: {config_name}")
             return config or {}

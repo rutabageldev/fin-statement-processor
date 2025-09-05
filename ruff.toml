@@ -22,7 +22,7 @@ select = [
     "B",    # flake8-bugbear
     "A",    # flake8-builtins
     "COM",  # flake8-commas
-    "CPY",  # flake8-copyright
+    # "CPY",  # flake8-copyright (requires preview mode)
     "C4",   # flake8-comprehensions
     "DTZ",  # flake8-datetimez
     "T10",  # flake8-debugger
@@ -71,8 +71,7 @@ ignore = [
     "D103",    # Missing docstring in public function
     "D104",    # Missing docstring in public package
     "D105",    # Missing docstring in magic method
-    "ANN101",  # Missing type annotation for self in method
-    "ANN102",  # Missing type annotation for cls in classmethod
+    # ANN101, ANN102 removed - deprecated rules
     "COM812",  # Trailing comma missing (conflicts with formatter)
     "ISC001",  # Implicit string concatenation (conflicts with formatter)
     "TD002",   # Missing author in TODO
@@ -95,13 +94,13 @@ ignore = [
     "PLW2901", # for loop variable overwritten by assignment target
     "BLE001",  # Do not catch blind exception: `Exception`
     "INP001",  # File is part of implicit namespace package. Add __init__.py
-    "PTH103",  # os.makedirs() should be replaced by Path.mkdir()
+    # "PTH103",  # os.makedirs() should be replaced by Path.mkdir() - FIXED
     "PTH118",  # os.path.join() should be replaced by Path
-    "PTH120",  # os.path.dirname() should be replaced by Path.parent
-    "PTH123",  # open() should be replaced by Path.open()
+    # "PTH120",  # os.path.dirname() should be replaced by Path.parent - FIXED
+    # "PTH123",  # open() should be replaced by Path.open() - FIXED
     "RUF012",  # Mutable class attributes should be annotated with ClassVar
-    "ANN001",  # Missing type annotation for function argument
-    "ANN201",  # Missing return type annotation for public function
+    # "ANN001",  # Missing type annotation for function argument - FIXED
+    # "ANN201",  # Missing return type annotation for public function - FIXED
     "TRY301",  # Abstract raise to an inner function
     "TRY401",  # Redundant exception object included in logging.exception call
     "TID252",  # Prefer absolute imports over relative imports from parent modules

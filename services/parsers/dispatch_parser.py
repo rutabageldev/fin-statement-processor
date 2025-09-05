@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Any
 from uuid import UUID
 
@@ -9,7 +10,7 @@ from services.parsers.pdf.parse_citi_cc_pdf import parse_citi_cc_pdf
 def parse_pdf(account_slug: str, pdf_path: str) -> dict:
     logging.debug(f"Dispatching PDF parser for account: {account_slug}")
     try:
-        with open(pdf_path, "rb") as f:
+        with Path(pdf_path).open("rb") as f:
             file_bytes = f.read()
 
         match account_slug:
@@ -37,7 +38,7 @@ def parse_csv(
         match account_slug:
             case "citi_cc":
                 logging.debug(f"✅ Passing statement_id {statement_uuid} to CSV parser")
-                with open(csv_path, encoding="utf-8") as f:
+                with Path(csv_path).open(encoding="utf-8") as f:
                     return parse_citi_cc_csv(f, statement_uuid, account_slug)
             case _:
                 logging.error(f"No CSV parser available for account: {account_slug}")

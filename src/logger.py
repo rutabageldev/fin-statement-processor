@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -18,7 +19,7 @@ class ColorFormatter(logging.Formatter):
     }
     RESET = "\033[0m"
 
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         color = self.COLORS.get(record.levelno, self.RESET)
         message = super().format(record)
         return f"{color}{message}{self.RESET}"
@@ -54,7 +55,7 @@ def get_logger(name: str) -> logging.Logger:
 
         # Optional file handler
         if log_to_file:
-            os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+            Path(log_file_path).parent.mkdir(parents=True, exist_ok=True)
             file_handler = logging.FileHandler(log_file_path)
             file_handler.setFormatter(formatter)
             logger.addHandler(file_handler)
