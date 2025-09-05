@@ -14,7 +14,17 @@ RUN apt-get update && apt-get install -y \
     bash \
     git \
     curl \
+    ca-certificates \
+    gnupg \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 18 LTS (required for Claude CLI)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Claude CLI globally
+RUN npm install -g @anthropic-ai/claude-code
 
 # Copy requirements first for better caching
 COPY requirements.txt requirements-dev.txt ./
