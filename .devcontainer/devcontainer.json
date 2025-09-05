@@ -4,7 +4,14 @@
   "service": "parser",
   "workspaceFolder": "/workspaces/fin-statement-processor",
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "git config --global --add safe.directory /workspaces/fin-statement-processor && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com' && pre-commit install",
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
+  ],
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "${localEnv:SSH_AUTH_SOCK}"
+  },
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.ssh && chmod 700 /home/vscode/.ssh && chmod 600 /home/vscode/.ssh/* 2>/dev/null || true && git config --global --add safe.directory /workspaces/fin-statement-processor && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com' && pre-commit install",
   "postStartCommand": "echo 'Python interpreter: ' && which python && python --version",
   "customizations": {
     "vscode": {
@@ -37,5 +44,5 @@
       }
     }
   },
-  "remoteUser": "root"
+  "remoteUser": "vscode"
 }
