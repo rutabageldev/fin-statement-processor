@@ -35,5 +35,9 @@ COPY . .
 # Default command - interactive shll (for dev container or override via compose)
 CMD ["bash", "-c", "while true; do sleep 60; done"]
 
-# Install Git
-RUN if [ "$INSTALL_DEV" = "true" ]; then apt-get update && apt-get install -y git; fi
+# Install Git and curl (needed for Claude CLI)
+RUN if [ "$INSTALL_DEV" = "true" ]; then \
+    apt-get update && apt-get install -y git curl && \
+    # Install Claude CLI
+    curl -fsSL https://claude.ai/claude-cli/install.sh | bash; \
+    fi
