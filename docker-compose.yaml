@@ -9,8 +9,8 @@ services:
     container_name: fin-parser-dev
     volumes:
       - .:/workspaces/fin-statement-processor
-      # WSL SSH key mounting - mount from Windows user profile
-      - ${USERPROFILE}/.ssh:/root/.ssh:ro
+      # Mount SSH keys from Windows to a temporary location for copying
+      - ${USERPROFILE}/.ssh:/tmp/host-ssh:ro
     env_file:
       - .env
     working_dir: /workspaces/fin-statement-processor

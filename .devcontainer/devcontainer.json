@@ -4,7 +4,7 @@
   "service": "parser",
   "workspaceFolder": "/workspaces/fin-statement-processor",
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "git config --global --add safe.directory /workspaces/fin-statement-processor && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com' && pre-commit install",
+  "postCreateCommand": "mkdir -p /root/.ssh && cp /tmp/host-ssh/* /root/.ssh/ 2>/dev/null || true && chmod 700 /root/.ssh && chmod 600 /root/.ssh/* 2>/dev/null || true && git config --global --add safe.directory /workspaces/fin-statement-processor && git config --global user.name 'rutabageldev' && git config --global user.email '187210498+rutabageldev@users.noreply.github.com' && pre-commit install",
   "postStartCommand": "echo 'Python interpreter: ' && which python && python --version",
   "customizations": {
     "vscode": {
