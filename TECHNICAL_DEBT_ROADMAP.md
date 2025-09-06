@@ -26,7 +26,7 @@ Based on violation counts and codebase analysis:
 
 ## 🎯 Phase-Based Roadmap
 
-### **Phase 1: Quick Wins & Safety** (Sprint 1-2)
+### **Phase 1: Quick Wins & Safety** (Sprint 1-2) — COMPLETED
 
 _Focus: High-impact, low-effort improvements_
 
@@ -53,12 +53,13 @@ _Focus: High-impact, low-effort improvements_
 **Benefits**: Better error messages and logging consistency
 **Risk**: Low - mostly formatting changes
 
-#### 1.3 Import & Path Modernization (Effort: 1 day)
+#### 1.3 Import & Path Modernization (Effort: 1 day) — COMPLETED
 
-**Remove these ignores:**
+**Completed:**
 
-- `PTH118` - Use pathlib instead of os.path.join (unknown violations) ✅ **Auto-fixable**
-- `TID252` - Prefer absolute imports (0 violations currently)
+- Replaced relative import in PDF parser with absolute import (TID252)
+- Verified no remaining PTH118 issues; kept Path.open usage
+- Removed `PTH118` and `TID252` from `ruff.toml` ignores
 
 **Benefits**: Modern Python practices, better path handling
 **Risk**: Very low
