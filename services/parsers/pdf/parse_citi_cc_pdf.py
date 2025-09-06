@@ -10,8 +10,7 @@ import pdfplumber
 from services.normalization import normalize_cc_details
 from services.normalization import normalize_debt_details
 from services.normalization import normalize_statement_data
-
-from ..parser_config_loader import load_parser_config
+from services.parsers.parser_config_loader import load_parser_config
 
 
 logging.getLogger("pdfminer").setLevel(logging.ERROR)
