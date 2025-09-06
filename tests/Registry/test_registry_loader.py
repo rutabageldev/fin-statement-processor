@@ -1,7 +1,7 @@
 import types
 
 import pytest
-import yaml  # type: ignore
+import yaml  # type: ignore[import-untyped]
 
 from registry import loader
 

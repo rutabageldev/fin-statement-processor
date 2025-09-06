@@ -23,7 +23,7 @@ def test_statement_details_from_dict_invalid_balance_type():
         "new_balance": 1000.00,
     }
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="could not convert string to float"):
         StatementDetails.from_dict(
             data=data,
             statement_id=uuid4(),
@@ -37,5 +37,5 @@ def test_statement_details_missing_balance_fields():
 
 def test_statement_details_invalid_balance_type():
     bad_data = {"previous_balance": "one thousand", "new_balance": 750.0}
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="could not convert string to float"):
         StatementDetails.from_dict(data=bad_data, statement_id=uuid4())

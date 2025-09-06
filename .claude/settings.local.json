@@ -11,7 +11,8 @@
       "Bash(git add:*)",
       "WebSearch",
       "Bash(ruff check:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(bandit:*)"
     ],
     "deny": [],
     "ask": []

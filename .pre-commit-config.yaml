@@ -42,8 +42,7 @@ repos:
     rev: 1.8.6
     hooks:
       - id: bandit
-        args: [-r, --format, json, --output, bandit-report.json]
-        exclude: ^tests/
+        args: [-r, --exclude, "tests"]
 
   # Dependency vulnerability scanning
   - repo: https://github.com/Lucas-C/pre-commit-hooks-safety

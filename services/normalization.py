@@ -15,6 +15,9 @@ from registry.loader import get_account_registry
 from registry.loader import get_institution_registry
 
 
+logger = logging.getLogger(__name__)
+
+
 def get_account_uuid(account_slug: str) -> UUID:
     """Get the UUID for an account by its slug.
 
@@ -54,7 +57,7 @@ def normalize_statement_data(
     Raises:
         ValueError: If account or institution not found in registry
     """
-    logging.debug("Normalizing statement data for account: %s", account_slug)
+    logger.debug("Normalizing statement data for account: %s", account_slug)
     account_registry = get_account_registry()
     institution_registry = get_institution_registry()
 
@@ -83,7 +86,7 @@ def normalize_statement_data(
         statement_id=statement_id,
     )
 
-    logging.info("✅ Statement data normalized for statement_id: %s", statement_id)
+    logger.info("✅ Statement data normalized for statement_id: %s", statement_id)
 
     return {
         "statement_data": statement_data,
@@ -106,7 +109,7 @@ def normalize_debt_details(
     Returns:
         Dict containing DebtDetails instance
     """
-    logging.debug(
+    logger.debug(
         "Normalizing debt details for account: %s, statement_id: %s",
         account_slug,
         statement_id,
@@ -120,7 +123,7 @@ def normalize_debt_details(
         statement_id=statement_id,
     )
 
-    logging.info("✅ Debt details normalized for statement_id: %s", statement_id)
+    logger.info("✅ Debt details normalized for statement_id: %s", statement_id)
 
     return {"debt_details": debt_details}
 
@@ -140,7 +143,7 @@ def normalize_cc_details(
     Returns:
         Dict containing CreditCardDetails instance
     """
-    logging.debug(
+    logger.debug(
         "Normalizing credit card details for account: %s, statement_id: %s",
         account_slug,
         statement_id,
@@ -154,7 +157,7 @@ def normalize_cc_details(
         statement_id=statement_id,
     )
 
-    logging.info("✅ Credit card details normalized for statement_id: %s", statement_id)
+    logger.info("✅ Credit card details normalized for statement_id: %s", statement_id)
 
     return {"credit_card_details": cc_details}
 
@@ -174,7 +177,7 @@ def normalize_transactions(
     Returns:
         Dict containing list of Transaction instances
     """
-    logging.debug(
+    logger.debug(
         "Normalizing transactions for account: %s, statement_id: %s",
         account_slug,
         statement_id,
@@ -193,13 +196,13 @@ def normalize_transactions(
             )
             transactions.append(transaction)
         except (ValueError, KeyError, TypeError) as e:
-            logging.warning(
+            logger.warning(
                 "❌ Skipping invalid transaction row: %s — Reason: %s",
                 transaction_data,
                 e,
             )
 
-    logging.info(
+    logger.info(
         "✅ %s transactions normalized for statement_id: %s",
         len(transactions),
         statement_id,

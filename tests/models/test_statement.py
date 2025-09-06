@@ -29,7 +29,7 @@ def test_statement_data_from_dict_invalid_date_format_raises():
         "bill_period_end": "2025-06-30",
     }
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(invalid|does not match)"):
         StatementData.from_dict(
             data=data,
             institution_id=uuid4(),
@@ -51,7 +51,7 @@ def test_statement_data_invalid_date_format():
         "bill_period_start": "01-2025-06",  # wrong format
         "bill_period_end": "2025-06-30",
     }
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(invalid|does not match)"):
         StatementData.from_dict(
             data=bad_data,
             institution_id=uuid4(),

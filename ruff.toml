@@ -70,25 +70,18 @@ ignore = [
     "D102",    # Missing docstring in public method
     "D103",    # Missing docstring in public function
     "D104",    # Missing docstring in public package
-    "D105",    # Missing docstring in magic method
     "COM812",  # Trailing comma missing (conflicts with formatter)
     "ISC001",  # Implicit string concatenation (conflicts with formatter)
     "TD002",   # Missing author in TODO
     "TD003",   # Missing issue link in TODO
     "FIX002",  # Line contains TODO
     "PLR0913", # Too many arguments in function definition
-    "LOG015",  # Call on root logger
-    "B017",    # Do not assert blind exception
-    "PT011",   # pytest.raises() is too broad
-    "PGH003",  # Use specific rule codes when ignoring type issues
     "E501",    # Line too long (handled by formatter)
-    "PLW2901", # for loop variable overwritten by assignment target
-    "BLE001",  # Do not catch blind exception: `Exception`
-    "INP001",  # File is part of implicit namespace package. Add __init__.py
-    # "PTH118",  # os.path.join() should be replaced by Path
-    "TRY301",  # Abstract raise to an inner function
-    "TRY401",  # Redundant exception object included in logging.exception call
-    # "TID252",  # Prefer absolute imports over relative imports from parent modules
+    # "PTH118",  # os.path.join() should be replaced by Path (Phase 1 - completed)
+    # "TID252",  # Prefer absolute imports over relative imports from parent modules (Phase 1 - completed)
+    # "PLW2901", # for loop variable overwritten by assignment target (removed - no violations)
+    # "D105",    # Missing docstring in magic method (removed - no violations)
+    # "LOG015",  # Call on root logger (Phase 5 - to be addressed)
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

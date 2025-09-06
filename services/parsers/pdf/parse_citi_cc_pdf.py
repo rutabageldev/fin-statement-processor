@@ -106,7 +106,7 @@ def extract_account_summary(statement_lines: list[str]) -> dict[str, Any]:
                 transform=field.get("transform"),
             )
 
-        except Exception as e:
+        except (ValueError, re.error, KeyError) as e:
             logger.warning("⚠️ Failed to extract field '%s': %s", field["name"], e)
             summary_data[field["name"]] = None  # Preserve key for consistency
 
@@ -141,7 +141,7 @@ def _convert_to_type(
                     )
                 except ValueError:
                     continue
-            logging.warning(
+            logger.warning(
                 "Could not parse date format: '%s' for field '%s'", val_str, field_name
             )
             return None
@@ -175,7 +175,7 @@ def extract_field_value(
             match_obj = re.search(value_pattern, line)
             logger.debug("line matched for '%s': %s", field_name, line)
             if not match_obj:
-                logging.warning(
+                logger.warning(
                     "Found label match but no value match in line: '%s'",
                     line,
                 )
