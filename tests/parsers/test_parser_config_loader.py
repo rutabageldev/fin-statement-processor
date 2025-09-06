@@ -2,6 +2,7 @@ import types
 from pathlib import Path
 
 import pytest
+import yaml  # type: ignore[import-untyped]
 
 from services.parsers import parser_config_loader
 
@@ -52,5 +53,5 @@ def test_load_parser_config_invalid_yaml(monkeypatch, tmp_path):
     fake_loader = types.SimpleNamespace(__file__=str(tmp_path / "fake_loader.py"))
     monkeypatch.setattr(parser_config_loader, "__file__", fake_loader.__file__)
 
-    with pytest.raises(Exception):
+    with pytest.raises((ValueError, FileNotFoundError, yaml.YAMLError)):
         parser_config_loader.load_parser_config("bad_config")

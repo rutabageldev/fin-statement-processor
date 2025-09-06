@@ -29,3 +29,4 @@ samples/*
 
 tests/data/*
 !tests.data.gitkeep
+bandit-report.json

@@ -42,7 +42,7 @@ def test_transaction_invalid_date_format():
         "type": "debit",
     }
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(invalid|could not convert)"):
         Transaction.from_dict(
             data=data,
             statement_id=uuid4(),
@@ -58,7 +58,7 @@ def test_transaction_invalid_type_literal():
         "type": "withdrawal",  # invalid value
     }
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(invalid|could not convert)"):
         Transaction.from_dict(
             data=data,
             statement_id=uuid4(),
@@ -125,7 +125,7 @@ def test_transaction_invalid_type_value():
         "description": "Test",
         "type": "other",  # Not allowed
     }
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(invalid|could not convert)"):
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
 
 
@@ -158,5 +158,5 @@ def test_transaction_malformed_amount():
         "description": "Bad amount",
         "type": "debit",
     }
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(invalid|could not convert)"):
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())

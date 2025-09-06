@@ -106,7 +106,7 @@ def extract_account_summary(statement_lines: list[str]) -> dict[str, Any]:
                 transform=field.get("transform"),
             )
 
-        except Exception as e:
+        except (ValueError, re.error, KeyError) as e:
             logger.warning("⚠️ Failed to extract field '%s': %s", field["name"], e)
             summary_data[field["name"]] = None  # Preserve key for consistency
 

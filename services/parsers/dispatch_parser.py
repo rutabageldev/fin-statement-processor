@@ -3,6 +3,7 @@
 import logging
 from pathlib import Path
 from typing import Any
+from typing import NoReturn
 from uuid import UUID
 
 from services.parsers.csv.parse_citi_cc_csv import parse_citi_cc_csv
@@ -32,15 +33,13 @@ def parse_pdf(account_slug: str, pdf_path: str) -> dict[str, Any]:
             case "citi_cc":
                 return parse_citi_cc_pdf(file_bytes, account_slug)
             case _:
-                logging.error("No PDF parser available for account: %s", account_slug)
-                error_msg = f"No PDF parser implemented for account: {account_slug}"
-                raise NotImplementedError(error_msg)
+                _raise_parser_not_implemented(account_slug, "PDF")
 
     except FileNotFoundError:
         logging.exception("PDF file not found: %s", pdf_path)
         raise
-    except Exception as e:
-        logging.exception("Unexpected error while parsing PDF: %s", e)
+    except Exception:
+        logging.exception("Unexpected error while parsing PDF")
         raise
 
 
@@ -71,12 +70,17 @@ def parse_csv(
                 with Path(csv_path).open("r", encoding="utf-8") as f:
                     return parse_citi_cc_csv(f, statement_uuid, account_slug)
             case _:
-                logging.error("No CSV parser available for account: %s", account_slug)
-                error_msg = f"No CSV parser implemented for account: {account_slug}"
-                raise NotImplementedError(error_msg)
+                _raise_parser_not_implemented(account_slug, "CSV")
     except FileNotFoundError:
         logging.exception("CSV file not found: %s", csv_path)
         raise
-    except Exception as e:
-        logging.exception("Unexpected error while parsing CSV: %s", e)
+    except Exception:
+        logging.exception("Unexpected error while parsing CSV")
         raise
+
+
+def _raise_parser_not_implemented(account_slug: str, parser_type: str) -> NoReturn:
+    """Raise NotImplementedError for missing parsers."""
+    logging.error("No %s parser available for account: %s", parser_type, account_slug)
+    error_msg = f"No {parser_type} parser implemented for account: {account_slug}"
+    raise NotImplementedError(error_msg)

@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore
+import yaml  # type: ignore[import-untyped]
 
 
 def load_yaml_registry(filename: str) -> dict[str, Any]:
