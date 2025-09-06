@@ -55,7 +55,7 @@ def parse_citi_cc_csv(
                 }
             )
 
-        except Exception as e:
+        except (ValueError, IndexError) as e:
             logger.warning(f"⚠️ Skipping row {row} due to error: {e}\nRow: {row}")
 
     normalized_transactions = normalize_transactions(

@@ -9,7 +9,8 @@
       "Bash(detect-secrets scan:*)",
       "Bash(git commit:*)",
       "Bash(git add:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(ruff check:*)"
     ],
     "deny": [],
     "ask": []

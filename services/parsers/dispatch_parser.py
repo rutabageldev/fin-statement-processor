@@ -7,7 +7,7 @@ from services.parsers.csv.parse_citi_cc_csv import parse_citi_cc_csv
 from services.parsers.pdf.parse_citi_cc_pdf import parse_citi_cc_pdf
 
 
-def parse_pdf(account_slug: str, pdf_path: str) -> dict:
+def parse_pdf(account_slug: str, pdf_path: str) -> dict[str, Any]:
     logging.debug(f"Dispatching PDF parser for account: {account_slug}")
     try:
         with Path(pdf_path).open("rb") as f:
@@ -38,7 +38,7 @@ def parse_csv(
         match account_slug:
             case "citi_cc":
                 logging.debug(f"✅ Passing statement_id {statement_uuid} to CSV parser")
-                with Path(csv_path).open(encoding="utf-8") as f:
+                with Path(csv_path).open("r", encoding="utf-8") as f:
                     return parse_citi_cc_csv(f, statement_uuid, account_slug)
             case _:
                 logging.error(f"No CSV parser available for account: {account_slug}")

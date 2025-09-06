@@ -1,10 +1,11 @@
 import logging
 from pathlib import Path
+from typing import Any
 
-import yaml  # type: ignore
+import yaml
 
 
-def load_parser_config(config_name: str) -> dict:
+def load_parser_config(config_name: str) -> dict[str, Any]:
     """Load the YAML config for the given parser."""
     config_path = (
         Path(__file__).parent / "pdf" / "config" / f"{config_name}_config.yaml"
@@ -17,7 +18,7 @@ def load_parser_config(config_name: str) -> dict:
 
     try:
         with config_path.open(encoding="utf-8") as f:
-            config = yaml.safe_load(f)
+            config: dict[str, Any] | None = yaml.safe_load(f)
             logging.debug(f"✅ Successfully loaded config: {config_name}")
             return config or {}
     except yaml.YAMLError:

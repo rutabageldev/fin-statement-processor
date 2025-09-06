@@ -36,7 +36,6 @@ def test_parse_citi_cc_csv_skips_row_with_no_amount():
 06/30/2025,No amount,,
 """
 
-    statement_id = uuid4()
     f = StringIO(csv_data)
 
     result = parse_citi_cc_csv(f, statement_uuid, account_slug)
@@ -50,7 +49,6 @@ def test_parse_citi_cc_csv_skips_row_with_bad_date():
 30-06-2025,Amazon,50.00,
 """
 
-    statement_id = uuid4()
     f = StringIO(csv_data)
 
     result = parse_citi_cc_csv(f, statement_uuid, account_slug)
@@ -63,7 +61,6 @@ def test_parse_citi_cc_csv_handles_credit_row_with_refund():
 06/30/2025,Refund issued,,25.00
 """
 
-    statement_id = uuid4()
     f = StringIO(csv_data)
 
     result = parse_citi_cc_csv(f, statement_uuid, account_slug)

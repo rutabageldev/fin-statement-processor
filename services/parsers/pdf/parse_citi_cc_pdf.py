@@ -33,7 +33,7 @@ def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> dict[str, Any]:
                 raw_text = page.extract_text()
                 if raw_text:
                     raw_lines = raw_text.splitlines()
-                    cleaned_lines = [line.strip() for line in raw_lines if line.strip]
+                    cleaned_lines = [line.strip() for line in raw_lines if line.strip()]
                     statement_lines.extend(cleaned_lines)
 
             account_summary = extract_account_summary(statement_lines)

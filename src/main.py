@@ -1,5 +1,3 @@
-import os
-
 from dotenv import load_dotenv
 
 from .logger import get_logger
@@ -10,7 +8,6 @@ logger = get_logger(__name__)
 
 
 def main() -> None:
-    app_name = os.getenv("APP_NAME", "Unnamed App")
     logger.debug("Debug-level log")
     logger.info("Info-level log")
     logger.warning("Warning-level log")

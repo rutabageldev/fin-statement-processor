@@ -119,17 +119,17 @@ def normalize_transactions(
 
     transactions = []
 
-    for transaction in parsed_data:
+    for transaction_data in parsed_data:
         try:
             transaction = Transaction.from_dict(
-                data=transaction,
+                data=transaction_data,
                 account_id=account_uuid,
                 statement_id=statement_id,
             )
             transactions.append(transaction)
-        except Exception as e:
+        except (ValueError, KeyError, TypeError) as e:
             logging.warning(
-                f"❌ Skipping invalid transaction row: {transaction} — Reason: {e}"
+                f"❌ Skipping invalid transaction row: {transaction_data} — Reason: {e}"
             )
 
     logging.info(
