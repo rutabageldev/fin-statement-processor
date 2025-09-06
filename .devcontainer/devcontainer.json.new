@@ -1,0 +1,110 @@
+{
+  "name": "Ledgerly Full Stack Development",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose",
+
+  // Connect to the backend service for primary development
+  "remoteUser": "appuser",
+
+  // Mount the entire project for cross-service development
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspaces/fin-statement-processor,type=bind,consistency=cached"
+  ],
+
+  // Services to start alongside the main service
+  "runServices": ["postgres", "minio", "minio-setup", "redis"],
+
+  "postCreateCommand": "echo 'Setting up development environment...' && pip install -r requirements-dev.txt",
+
+  "postStartCommand": "echo '🚀 Ledgerly development environment ready!' && echo 'Services available:' && echo '  • Backend: http://localhost:8000 (current container)' && echo '  • Frontend: http://localhost:3000 (run: docker compose exec frontend bash)' && echo '  • Database: localhost:5432' && echo '  • MinIO: http://localhost:9001'",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Backend (Python) extensions
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-python.mypy-type-checker",
+
+        // Frontend (TypeScript/React) extensions
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+
+        // Database extensions
+        "ms-ossdata.vscode-postgresql",
+
+        // Docker extensions
+        "ms-azuretools.vscode-docker",
+
+        // General extensions
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        // Python settings (for backend development)
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.extraPaths": ["/app"],
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+          },
+          "editor.formatOnSave": true
+        },
+
+        // TypeScript settings (for frontend development)
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
+        },
+
+        // TailwindCSS settings
+        "tailwindCSS.includeLanguages": {
+          "typescript": "typescript",
+          "typescriptreact": "typescriptreact"
+        },
+
+        // Multi-root workspace support
+        "files.associations": {
+          "docker-compose.yml": "dockercompose",
+          "*.env*": "dotenv"
+        }
+      }
+    }
+  },
+
+  // Forward ports for all services
+  "forwardPorts": [3000, 8000, 5432, 9000, 9001, 6379],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (React)",
+      "onAutoForward": "openBrowser"
+    },
+    "8000": {
+      "label": "Backend (FastAPI)",
+      "onAutoForward": "openBrowser"
+    },
+    "9001": {
+      "label": "MinIO Console",
+      "onAutoForward": "ignore"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "ignore"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "ignore"
+    }
+  }
+}

@@ -1,6 +1,0 @@
-fastapi
-pandas
-pdfplumber
-pydantic
-python-dotenv
-uvicorn

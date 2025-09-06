@@ -1,0 +1,33 @@
+# Development Dockerfile for Ledgerly Frontend
+FROM node:18-alpine as base
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Development stage
+FROM base as development
+
+# Install additional development tools if needed
+RUN npm install -g @types/node
+
+# Copy application code (will be volume mounted in development)
+COPY . .
+
+# Create non-root user for security
+RUN adduser -D -s /bin/sh appuser
+RUN chown -R appuser:appuser /app
+USER appuser
+
+# Expose port for Vite dev server
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:3000 || exit 1
+
+# Default command (can be overridden in docker-compose.yml)
+CMD ["npm", "run", "dev", "--", "--host"]

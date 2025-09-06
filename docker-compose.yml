@@ -1,0 +1,157 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ledgerly-postgres
+    environment:
+      POSTGRES_DB: ledgerly
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dev_password # pragma: allowlist secret
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./database/seeds:/docker-entrypoint-initdb.d/seeds
+    networks:
+      - ledgerly
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ledgerly"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MinIO Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: ledgerly-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin # pragma: allowlist secret
+      MINIO_DOMAIN: localhost
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    volumes:
+      - minio_data:/data
+    networks:
+      - ledgerly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # MinIO Client for bucket setup
+  minio-setup:
+    image: minio/mc:latest
+    container_name: ledgerly-minio-setup
+    depends_on:
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./scripts/minio/setup-buckets.sh:/setup-buckets.sh
+    networks:
+      - ledgerly
+    entrypoint: ["/setup-buckets.sh"]
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: ledgerly-backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:dev_password@postgres:5432/ledgerly
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_SECURE=false
+      - ENVIRONMENT=development
+      - LOG_LEVEL=DEBUG
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - backend_cache:/root/.cache
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-setup:
+        condition: service_completed_successfully
+    networks:
+      - ledgerly
+    command:
+      ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: ledgerly-frontend
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_cache:/root/.cache
+    depends_on:
+      - backend
+    networks:
+      - ledgerly
+    command: ["npm", "run", "dev", "--", "--host"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for caching (future use)
+  redis:
+    image: redis:7-alpine
+    container_name: ledgerly-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ledgerly
+    command: redis-server --appendonly yes --requirepass dev_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  minio_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_cache:
+    driver: local
+  frontend_node_modules:
+    driver: local
+  frontend_cache:
+    driver: local
+
+networks:
+  ledgerly:
+    driver: bridge
+    name: ledgerly-network
