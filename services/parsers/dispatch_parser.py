@@ -1,3 +1,5 @@
+"""Main parser dispatcher for routing files to appropriate parsers."""
+
 import logging
 from pathlib import Path
 from typing import Any
@@ -8,6 +10,19 @@ from services.parsers.pdf.parse_citi_cc_pdf import parse_citi_cc_pdf
 
 
 def parse_pdf(account_slug: str, pdf_path: str) -> dict[str, Any]:
+    """Parse a PDF statement file using account-specific parser.
+
+    Args:
+        account_slug: Account type identifier (e.g., 'citi_cc')
+        pdf_path: Path to the PDF file to parse
+
+    Returns:
+        Dictionary containing parsed statement data
+
+    Raises:
+        NotImplementedError: If no parser exists for the account type
+        FileNotFoundError: If the PDF file doesn't exist
+    """
     logging.debug("Dispatching PDF parser for account: %s", account_slug)
     try:
         with Path(pdf_path).open("rb") as f:
@@ -32,6 +47,20 @@ def parse_pdf(account_slug: str, pdf_path: str) -> dict[str, Any]:
 def parse_csv(
     account_slug: str, csv_path: str, statement_uuid: UUID
 ) -> list[dict[str, Any]]:
+    """Parse a CSV transaction file using account-specific parser.
+
+    Args:
+        account_slug: Account type identifier (e.g., 'citi_cc')
+        csv_path: Path to the CSV file to parse
+        statement_uuid: UUID of the associated statement
+
+    Returns:
+        List of normalized transaction dictionaries
+
+    Raises:
+        NotImplementedError: If no parser exists for the account type
+        FileNotFoundError: If the CSV file doesn't exist
+    """
     logging.debug("Dispatching CSV parser for account: %s", account_slug)
     try:
         match account_slug:

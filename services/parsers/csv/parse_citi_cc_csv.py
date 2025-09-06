@@ -1,3 +1,5 @@
+"""Citi Credit Card CSV transaction parser."""
+
 import csv
 import logging
 from datetime import UTC
@@ -15,6 +17,16 @@ logger = logging.getLogger(__name__)
 def parse_citi_cc_csv(
     csv_file: TextIO, statement_uuid: UUID, account_slug: str
 ) -> list[dict[str, Any]]:
+    """Parse Citi Credit Card CSV transaction file.
+
+    Args:
+        csv_file: Open CSV file object
+        statement_uuid: UUID of the associated statement
+        account_slug: Account identifier
+
+    Returns:
+        List of normalized transaction dictionaries
+    """
     transactions = []
     reader = csv.DictReader(csv_file)
 

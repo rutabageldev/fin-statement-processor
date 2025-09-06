@@ -1,3 +1,5 @@
+"""Core business logic for normalizing financial statement data."""
+
 import logging
 from datetime import datetime
 from typing import Any
@@ -14,6 +16,17 @@ from registry.loader import get_institution_registry
 
 
 def get_account_uuid(account_slug: str) -> UUID:
+    """Get the UUID for an account by its slug.
+
+    Args:
+        account_slug: The account identifier (e.g., 'citi_cc')
+
+    Returns:
+        UUID of the account
+
+    Raises:
+        ValueError: If account_slug is not found in registry
+    """
     registry = get_account_registry()
     if account_slug not in registry:
         error_msg = f"Unsupported account slug: {account_slug}"
@@ -27,6 +40,20 @@ def normalize_statement_data(
     file_url: str | None = None,
     uploaded_at: datetime | None = None,
 ) -> dict[str, Any]:
+    """Normalize parsed statement data into structured models.
+
+    Args:
+        parsed_data: Raw parsed data from statement
+        account_slug: Account identifier
+        file_url: Optional URL to source file
+        uploaded_at: Optional upload timestamp
+
+    Returns:
+        Dict containing StatementData and StatementDetails instances
+
+    Raises:
+        ValueError: If account or institution not found in registry
+    """
     logging.debug("Normalizing statement data for account: %s", account_slug)
     account_registry = get_account_registry()
     institution_registry = get_institution_registry()
@@ -69,6 +96,16 @@ def normalize_debt_details(
     account_slug: str,
     statement_id: UUID,
 ) -> dict[str, Any]:
+    """Normalize debt-related data from statement.
+
+    Args:
+        parsed_data: Raw parsed data containing debt information
+        account_slug: Account identifier
+        statement_id: UUID of the associated statement
+
+    Returns:
+        Dict containing DebtDetails instance
+    """
     logging.debug(
         "Normalizing debt details for account: %s, statement_id: %s",
         account_slug,
@@ -93,6 +130,16 @@ def normalize_cc_details(
     account_slug: str,
     statement_id: UUID,
 ) -> dict[str, Any]:
+    """Normalize credit card specific data from statement.
+
+    Args:
+        parsed_data: Raw parsed data containing credit card information
+        account_slug: Account identifier
+        statement_id: UUID of the associated statement
+
+    Returns:
+        Dict containing CreditCardDetails instance
+    """
     logging.debug(
         "Normalizing credit card details for account: %s, statement_id: %s",
         account_slug,
@@ -117,6 +164,16 @@ def normalize_transactions(
     account_slug: str,
     statement_id: UUID,
 ) -> dict[str, list[Transaction]]:
+    """Normalize transaction data from statement.
+
+    Args:
+        parsed_data: List of raw transaction data
+        account_slug: Account identifier
+        statement_id: UUID of the associated statement
+
+    Returns:
+        Dict containing list of Transaction instances
+    """
     logging.debug(
         "Normalizing transactions for account: %s, statement_id: %s",
         account_slug,

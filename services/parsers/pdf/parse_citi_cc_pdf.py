@@ -1,10 +1,11 @@
+"""Citi Credit Card PDF statement parser."""
+
 import logging
 import re
 from datetime import UTC
 from datetime import datetime
 from io import BytesIO
 from typing import Any
-from typing import cast
 
 import pdfplumber
 
@@ -25,6 +26,18 @@ TRANSFORM_REGISTRY = {
 
 
 def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> dict[str, Any]:
+    """Parse Citi Credit Card PDF statement.
+
+    Args:
+        file_bytes: PDF file content as bytes
+        account_slug: Account identifier
+
+    Returns:
+        Dictionary containing normalized statement data
+
+    Raises:
+        Exception: If PDF parsing fails
+    """
     try:
         with pdfplumber.open(BytesIO(file_bytes)) as pdf:
             statement_lines: list[str] = []
@@ -70,6 +83,14 @@ def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> dict[str, Any]:
 
 
 def extract_account_summary(statement_lines: list[str]) -> dict[str, Any]:
+    """Extract account summary data from statement text lines.
+
+    Args:
+        statement_lines: List of text lines from the PDF
+
+    Returns:
+        Dictionary containing extracted account summary data
+    """
     config = load_parser_config("citi_cc")
     summary_fields = config.get("account_summary_fields", [])
     summary_data: dict[str, Any] = {}
@@ -92,6 +113,42 @@ def extract_account_summary(statement_lines: list[str]) -> dict[str, Any]:
     return summary_data
 
 
+def _apply_transform(raw_val: str, transform: str | None) -> str | float | int:
+    """Apply transformation to raw value."""
+    if transform and transform in TRANSFORM_REGISTRY:
+        return TRANSFORM_REGISTRY[transform](raw_val)
+    return raw_val
+
+
+def _convert_to_type(
+    val: str | float, data_type: str, field_name: str
+) -> str | float | int | None:
+    """Convert value to specified data type."""
+    match data_type:
+        case "float":
+            return float(val)
+        case "int":
+            return int(float(val))
+        case "date":
+            val_str = str(val)
+            for fmt in ("%m/%d/%Y", "%m-%d-%Y", "%m-%d-%y", "%m/%d/%y", "%Y-%m-%d"):
+                try:
+                    return (
+                        datetime.strptime(val_str, fmt)
+                        .replace(tzinfo=UTC)
+                        .date()
+                        .isoformat()
+                    )
+                except ValueError:
+                    continue
+            logging.warning(
+                "Could not parse date format: '%s' for field '%s'", val_str, field_name
+            )
+            return None
+        case _:
+            return val
+
+
 def extract_field_value(
     lines: list[str],
     label_patterns: list[str],
@@ -100,6 +157,19 @@ def extract_field_value(
     field_name: str = "unknown",
     transform: str | None = None,
 ) -> str | float | int | None:
+    """Extract and process field value from statement lines.
+
+    Args:
+        lines: List of text lines from the statement
+        label_patterns: Regex patterns to match field labels
+        value_pattern: Regex pattern to extract the value
+        data_type: Target data type for conversion
+        field_name: Name of field for logging
+        transform: Optional transformation to apply
+
+    Returns:
+        Processed field value or None if not found/invalid
+    """
     for line in lines:
         if any(re.search(label, line) for label in label_patterns):
             match_obj = re.search(value_pattern, line)
@@ -113,60 +183,13 @@ def extract_field_value(
 
             raw_val = match_obj.group(0).strip().replace("$", "").replace(",", "")
 
-            transformed_val: Any
-
             try:
-                transformed_val = (
-                    TRANSFORM_REGISTRY[transform](raw_val)
-                    if transform in TRANSFORM_REGISTRY
-                    else raw_val
-                )
-                transformed_val = cast("str | float | int", transformed_val)
+                transformed_val = _apply_transform(raw_val, transform)
+                return _convert_to_type(transformed_val, data_type, field_name)
             except ValueError:
                 logger.warning(
-                    "Could not apply transform '%s' to value '%s'",
-                    transform,
+                    "Could not process value '%s' for field '%s'",
                     raw_val,
-                )
-                return None
-
-            try:
-                match data_type:
-                    case "float":
-                        return float(transformed_val)
-                    case "int":
-                        return int(float(transformed_val))
-                    case "date":
-                        val_str = str(transformed_val)
-                        for fmt in (
-                            "%m/%d/%Y",
-                            "%m-%d-%Y",
-                            "%m-%d-%y",
-                            "%m/%d/%y",
-                            "%Y-%m-%d",
-                        ):
-                            try:
-                                return (
-                                    datetime.strptime(val_str, fmt)
-                                    .replace(tzinfo=UTC)
-                                    .date()
-                                    .isoformat()
-                                )
-                            except ValueError:
-                                continue
-                        logging.warning(
-                            "Could not parse date format: '%s' for field '%s'",
-                            val_str,
-                            field_name,
-                        )
-                        return None
-                    case _:
-                        return transformed_val
-            except ValueError:
-                logger.warning(
-                    "Could not cast '%s' to %s for '%s'",
-                    transformed_val,
-                    data_type,
                     field_name,
                 )
                 return None

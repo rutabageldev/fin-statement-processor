@@ -1,4 +1,5 @@
-# models/statement.py
+"""Statement data models for financial documents processing."""
+
 from datetime import UTC
 from datetime import date
 from datetime import datetime
@@ -9,6 +10,12 @@ from pydantic import BaseModel
 
 
 class StatementData(BaseModel):
+    """Represents core statement data from financial documents.
+
+    Contains metadata about statement periods, file locations,
+    and references to institution/account information.
+    """
+
     id: UUID
     institution_id: UUID
     account_id: UUID
@@ -51,6 +58,16 @@ class StatementDetails(BaseModel):
         statement_id: UUID,
         detail_id: UUID | None = None,
     ) -> "StatementDetails":
+        """Create StatementDetails from parsed balance data.
+
+        Args:
+            data: Parsed statement data containing balance information
+            statement_id: UUID of the associated statement
+            detail_id: Optional UUID for the details (generates new if None)
+
+        Returns:
+            StatementDetails instance with balance data
+        """
         return cls(
             id=detail_id or uuid4(),
             statement_id=statement_id,

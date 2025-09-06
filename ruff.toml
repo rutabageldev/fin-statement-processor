@@ -89,7 +89,6 @@ ignore = [
     "TRY301",  # Abstract raise to an inner function
     "TRY401",  # Redundant exception object included in logging.exception call
     # "TID252",  # Prefer absolute imports over relative imports from parent modules
-    "PLR0911", # Too many return statements
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

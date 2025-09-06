@@ -1,3 +1,5 @@
+"""Core data models for financial statement processing."""
+
 from .cc_details import CreditCardDetails
 from .debt_details import DebtDetails
 from .statement import StatementData

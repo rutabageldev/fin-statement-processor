@@ -1,4 +1,5 @@
-# models/debt_details.py
+"""Debt and payment detail models."""
+
 from datetime import date
 from uuid import UUID
 from uuid import uuid4
@@ -7,6 +8,12 @@ from pydantic import BaseModel
 
 
 class DebtDetails(BaseModel):
+    """Debt and payment details from statements.
+
+    Contains payment information, interest rates, and
+    other debt-related details.
+    """
+
     id: UUID
     account_id: UUID
     statement_id: UUID
@@ -25,6 +32,17 @@ class DebtDetails(BaseModel):
         statement_id: UUID,
         debt_detail_id: UUID | None = None,
     ) -> "DebtDetails":
+        """Create DebtDetails from parsed debt data.
+
+        Args:
+            data: Parsed statement data containing debt information
+            account_id: UUID of the account
+            statement_id: UUID of the associated statement
+            debt_detail_id: Optional UUID for the details (generates new if None)
+
+        Returns:
+            DebtDetails instance with debt data
+        """
         payments = data.get("payments", 0.0)
         interest_paid = data.get("interest_paid", 0.0)
         principal_paid = abs(payments) - interest_paid
