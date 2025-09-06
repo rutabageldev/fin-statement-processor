@@ -116,7 +116,7 @@ exclude = [
 ]
 
 [lint.per-file-ignores]
-"tests/**/*.py" = [
+"**/tests/**/*.py" = [
     "S101",    # Use of assert detected (appropriate in tests)
     "D",       # pydocstyle (not needed in tests)
     "ANN",     # flake8-annotations (not needed in tests)

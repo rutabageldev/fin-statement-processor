@@ -5,8 +5,8 @@ FROM node:18-alpine as base
 WORKDIR /app
 
 # Install dependencies
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json ./
+RUN npm install && chown -R node:node /app/node_modules
 
 # Development stage
 FROM base as development
@@ -17,10 +17,9 @@ RUN npm install -g @types/node
 # Copy application code (will be volume mounted in development)
 COPY . .
 
-# Create non-root user for security
-RUN adduser -D -s /bin/sh appuser
-RUN chown -R appuser:appuser /app
-USER appuser
+# Use the existing node user and set proper permissions
+RUN chown -R node:node /app
+USER node
 
 # Expose port for Vite dev server
 EXPOSE 3000

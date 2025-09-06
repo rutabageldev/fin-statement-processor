@@ -15,10 +15,7 @@
       "Bash(bandit:*)",
       "Bash(docker compose:*)",
       "Read(//usr/bin/**)",
-      "Bash(echo $PATH)",
-      "Bash(docker-compose up:*)",
-      "Bash(docker exec:*)",
-      "Bash(curl:*)"
+      "Bash(echo $PATH)"
     ],
     "deny": [],
     "ask": []
