@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import ClassVar
 
 from dotenv import load_dotenv
 
@@ -10,14 +11,14 @@ load_dotenv()
 
 
 class ColorFormatter(logging.Formatter):
-    COLORS = {
+    COLORS: ClassVar[dict[int, str]] = {
         logging.DEBUG: "\033[90m",  # Gray
         logging.INFO: "\033[94m",  # Blue
         logging.WARNING: "\033[93m",  # Yellow
         logging.ERROR: "\033[91m",  # Red
         logging.CRITICAL: "\033[95m",  # Magenta
     }
-    RESET = "\033[0m"
+    RESET: ClassVar[str] = "\033[0m"
 
     def format(self, record: logging.LogRecord) -> str:
         color = self.COLORS.get(record.levelno, self.RESET)

@@ -1,3 +1,4 @@
+from datetime import UTC
 from datetime import date
 from datetime import datetime
 from unittest.mock import patch
@@ -28,7 +29,7 @@ def test_normalize_statement_data_happy_path(
     }
 
     file_url = "s3://bucket/file.pdf"
-    uploaded_at = datetime(2025, 7, 1)
+    uploaded_at = datetime(2025, 7, 1, tzinfo=UTC)
 
     # Act
     result = normalize_statement_data(

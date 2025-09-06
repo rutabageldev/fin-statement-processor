@@ -1,5 +1,6 @@
 import logging
 import re
+from datetime import UTC
 from datetime import datetime
 from io import BytesIO
 from typing import Any
@@ -41,7 +42,7 @@ def parse_citi_cc_pdf(file_bytes: bytes, account_slug: str) -> dict[str, Any]:
                 parsed_data=account_summary,
                 account_slug=account_slug,
                 file_url=None,
-                uploaded_at=datetime.utcnow(),
+                uploaded_at=datetime.now(UTC),
             )
 
             debt_data = normalize_debt_details(
@@ -98,7 +99,7 @@ def extract_field_value(
     data_type: str = "string",
     field_name: str = "unknown",
     transform: str | None = None,
-) -> Any | None:
+) -> str | float | int | None:
     for line in lines:
         if any(re.search(label, line) for label in label_patterns):
             match_obj = re.search(value_pattern, line)
@@ -146,7 +147,10 @@ def extract_field_value(
                         ):
                             try:
                                 return (
-                                    datetime.strptime(val_str, fmt).date().isoformat()
+                                    datetime.strptime(val_str, fmt)
+                                    .replace(tzinfo=UTC)
+                                    .date()
+                                    .isoformat()
                                 )
                             except ValueError:
                                 continue

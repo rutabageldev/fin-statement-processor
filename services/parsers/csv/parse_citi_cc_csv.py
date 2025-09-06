@@ -1,5 +1,6 @@
 import csv
 import logging
+from datetime import UTC
 from datetime import datetime
 from typing import Any
 from typing import TextIO
@@ -25,7 +26,7 @@ def parse_citi_cc_csv(
             credit = row["Credit"].strip()
 
             # Parse date
-            date = datetime.strptime(date_str, "%m/%d/%Y").date()
+            date = datetime.strptime(date_str, "%m/%d/%Y").replace(tzinfo=UTC).date()
 
             # Determine amoutn and type
             if debit:

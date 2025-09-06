@@ -80,21 +80,16 @@ ignore = [
     "LOG015",  # Call on root logger
     "B017",    # Do not assert blind exception
     "PT011",   # pytest.raises() is too broad
-    "DTZ001",  # datetime() called without a tzinfo argument
-    "DTZ007",  # Naive datetime constructed using strptime() without %z
     "PGH003",  # Use specific rule codes when ignoring type issues
     "E501",    # Line too long (handled by formatter)
     "PLW2901", # for loop variable overwritten by assignment target
     "BLE001",  # Do not catch blind exception: `Exception`
     "INP001",  # File is part of implicit namespace package. Add __init__.py
     # "PTH118",  # os.path.join() should be replaced by Path
-    "RUF012",  # Mutable class attributes should be annotated with ClassVar
     "TRY301",  # Abstract raise to an inner function
     "TRY401",  # Redundant exception object included in logging.exception call
     # "TID252",  # Prefer absolute imports over relative imports from parent modules
-    "DTZ003",  # datetime.datetime.utcnow() used
     "PLR0911", # Too many return statements
-    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

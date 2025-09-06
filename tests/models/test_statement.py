@@ -19,7 +19,7 @@ def test_statement_data_from_dict_missing_field_raises():
             institution_id=uuid4(),
             account_id=uuid4(),
             file_url="s3://bucket/stmt.pdf",
-            uploaded_at=datetime(2025, 7, 1),
+            uploaded_at=datetime(2025, 7, 1, tzinfo=UTC),
         )
 
 
