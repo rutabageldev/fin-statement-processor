@@ -65,7 +65,7 @@ select = [
 ]
 
 ignore = [
-    # Documentation - Selective strategy (Phase 3)
+    # Documentation - Selective strategy (many violations remain)
     "D100",    # Missing docstring in public module
     "D101",    # Missing docstring in public class
     "D102",    # Missing docstring in public method
@@ -77,14 +77,8 @@ ignore = [
     "ISC001",  # Implicit string concatenation (conflicts with formatter)
     "E501",    # Line too long (handled by formatter)
 
-    # Design decisions - Legitimate complexity
-    "PLR0913", # Too many arguments in function definition (2 valid cases)
-
-    # === COMPLETED PHASES (removed from ignores) ===
-    # Phase 1: "PTH118", "TID252" - pathlib and import modernization
-    # Phase 2: "ANN401", "RUF012", "DTZ001", "DTZ007", "DTZ003" - type safety & datetime
-    # Phase 4: "BLE001", "B017", "PT011", "TRY301", "TRY401", "PGH003", "INP001" - security & testing
-    # Phase 5: "LOG015", "PLW2901", "D105", "TD002", "TD003", "FIX002" - logging & cleanup
+    # Legitimate complexity - 2 valid cases
+    "PLR0913", # Too many arguments in function definition
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
@@ -123,12 +117,11 @@ exclude = [
 
 [lint.per-file-ignores]
 "tests/**/*.py" = [
-    "S101",    # Use of assert detected
-    "D",       # pydocstyle
-    "ANN",     # flake8-annotations
-    "PLR2004", # Magic value used in comparison
+    "S101",    # Use of assert detected (appropriate in tests)
+    "D",       # pydocstyle (not needed in tests)
+    "ANN",     # flake8-annotations (not needed in tests)
+    "PLR2004", # Magic value used in comparison (common in tests)
 ]
-"**/__init__.py" = ["F401"]  # Unused imports in __init__.py
 
 [lint.isort]
 known-first-party = ["models", "services", "registry"]
