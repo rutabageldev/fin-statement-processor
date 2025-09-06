@@ -77,13 +77,7 @@ ignore = [
     "TD003",   # Missing issue link in TODO
     "FIX002",  # Line contains TODO
     "PLR0913", # Too many arguments in function definition
-    "TRY003",  # Avoid specifying long messages outside the exception class
-    "EM102",   # Exception must not use an f-string literal
-    "EM101",   # Exception must not use a string literal
-    "G004",    # Logging statement uses f-string
     "LOG015",  # Call on root logger
-    "ARG001",  # Unused function argument
-    "F841",    # Local variable assigned to but never used
     "B017",    # Do not assert blind exception
     "PT011",   # pytest.raises() is too broad
     "DTZ001",  # datetime() called without a tzinfo argument

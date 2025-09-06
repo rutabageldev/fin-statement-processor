@@ -10,20 +10,21 @@ def load_parser_config(config_name: str) -> dict[str, Any]:
     config_path = (
         Path(__file__).parent / "pdf" / "config" / f"{config_name}_config.yaml"
     )
-    logging.debug(f"🔍 Looking for config at: {config_path}")
+    logging.debug("🔍 Looking for config at: %s", config_path)
 
     if not config_path.exists():
-        logging.error(f"❌ Config file not found: {config_path}")
-        raise FileNotFoundError(f"Config file not found: {config_path}")
+        logging.error("❌ Config file not found: %s", config_path)
+        error_msg = f"Config file not found: {config_path}"
+        raise FileNotFoundError(error_msg)
 
     try:
         with config_path.open(encoding="utf-8") as f:
             config: dict[str, Any] | None = yaml.safe_load(f)
-            logging.debug(f"✅ Successfully loaded config: {config_name}")
+            logging.debug("✅ Successfully loaded config: %s", config_name)
             return config or {}
     except yaml.YAMLError:
-        logging.exception(f"❌ YAML parsing error in config: {config_path}")
+        logging.exception("❌ YAML parsing error in config: %s", config_path)
         raise
     except Exception:
-        logging.exception(f"❌ Unexpected error loading config: {config_path}")
+        logging.exception("❌ Unexpected error loading config: %s", config_path)
         raise

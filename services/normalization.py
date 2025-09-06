@@ -16,7 +16,8 @@ from registry.loader import get_institution_registry
 def get_account_uuid(account_slug: str) -> UUID:
     registry = get_account_registry()
     if account_slug not in registry:
-        raise ValueError(f"Unsupported account slug: {account_slug}")
+        error_msg = f"Unsupported account slug: {account_slug}"
+        raise ValueError(error_msg)
     return UUID(registry[account_slug]["uuid"])
 
 
@@ -26,14 +27,15 @@ def normalize_statement_data(
     file_url: str | None = None,
     uploaded_at: datetime | None = None,
 ) -> dict[str, Any]:
-    logging.debug(f"Normalizing statement data for account: {account_slug}")
+    logging.debug("Normalizing statement data for account: %s", account_slug)
     account_registry = get_account_registry()
     institution_registry = get_institution_registry()
 
     institution_slug = account_registry[account_slug]["metadata"]["institution"]
 
     if institution_slug not in institution_registry:
-        raise ValueError(f"Unsupported institution slug: {institution_slug}")
+        error_msg = f"Unsupported institution slug: {institution_slug}"
+        raise ValueError(error_msg)
 
     account_uuid = get_account_uuid(account_slug)
     institution_uuid = institution_registry[institution_slug]["uuid"]
@@ -54,7 +56,7 @@ def normalize_statement_data(
         statement_id=statement_id,
     )
 
-    logging.info(f"✅ Statement data normalized for statement_id: {statement_id}")
+    logging.info("✅ Statement data normalized for statement_id: %s", statement_id)
 
     return {
         "statement_data": statement_data,
@@ -68,7 +70,9 @@ def normalize_debt_details(
     statement_id: UUID,
 ) -> dict[str, Any]:
     logging.debug(
-        f"Normalizing debt details for account: {account_slug}, statement_id: {statement_id}"
+        "Normalizing debt details for account: %s, statement_id: %s",
+        account_slug,
+        statement_id,
     )
 
     account_uuid = get_account_uuid(account_slug)
@@ -79,7 +83,7 @@ def normalize_debt_details(
         statement_id=statement_id,
     )
 
-    logging.info(f"✅ Debt details normalized for statement_id: {statement_id}")
+    logging.info("✅ Debt details normalized for statement_id: %s", statement_id)
 
     return {"debt_details": debt_details}
 
@@ -90,7 +94,9 @@ def normalize_cc_details(
     statement_id: UUID,
 ) -> dict[str, Any]:
     logging.debug(
-        f"Normalizing credit card details for account: {account_slug}, statement_id: {statement_id}"
+        "Normalizing credit card details for account: %s, statement_id: %s",
+        account_slug,
+        statement_id,
     )
 
     account_uuid = get_account_uuid(account_slug)
@@ -101,7 +107,7 @@ def normalize_cc_details(
         statement_id=statement_id,
     )
 
-    logging.info(f"✅ Credit card details normalized for statement_id: {statement_id}")
+    logging.info("✅ Credit card details normalized for statement_id: %s", statement_id)
 
     return {"credit_card_details": cc_details}
 
@@ -112,7 +118,9 @@ def normalize_transactions(
     statement_id: UUID,
 ) -> dict[str, list[Transaction]]:
     logging.debug(
-        f"Normalizing transactions for account: {account_slug}, statement_id: {statement_id}"
+        "Normalizing transactions for account: %s, statement_id: %s",
+        account_slug,
+        statement_id,
     )
 
     account_uuid = get_account_uuid(account_slug)
@@ -129,11 +137,15 @@ def normalize_transactions(
             transactions.append(transaction)
         except (ValueError, KeyError, TypeError) as e:
             logging.warning(
-                f"❌ Skipping invalid transaction row: {transaction_data} — Reason: {e}"
+                "❌ Skipping invalid transaction row: %s — Reason: %s",
+                transaction_data,
+                e,
             )
 
     logging.info(
-        f"✅ {len(transactions)} transactions normalized for statement_id: {statement_id}"
+        "✅ %s transactions normalized for statement_id: %s",
+        len(transactions),
+        statement_id,
     )
 
     return {"transactions": transactions}

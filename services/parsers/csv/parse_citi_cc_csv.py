@@ -41,7 +41,7 @@ def parse_citi_cc_csv(
                 else:
                     transaction_type = "refund"
             else:
-                logger.debug(f"Row {row} skipped: no debit or credit found.")
+                logger.debug("Row %s skipped: no debit or credit found.", row)
                 continue
 
             transactions.append(
@@ -56,7 +56,7 @@ def parse_citi_cc_csv(
             )
 
         except (ValueError, IndexError) as e:
-            logger.warning(f"⚠️ Skipping row {row} due to error: {e}\nRow: {row}")
+            logger.warning("⚠️ Skipping row %s due to error: %s\nRow: %s", row, e, row)
 
     normalized_transactions = normalize_transactions(
         parsed_data=transactions,
@@ -64,8 +64,9 @@ def parse_citi_cc_csv(
         statement_id=statement_uuid,
     )
 
-    logger.info(f"✅ Parsed {len(transactions)} valid transactions from CSV.")
+    logger.info("✅ Parsed %s valid transactions from CSV.", len(transactions))
     logger.debug(
-        f"Returning {len(normalized_transactions['transactions'])} normalized transactions"
+        "Returning %s normalized transactions",
+        len(normalized_transactions["transactions"]),
     )
     return [txn.model_dump() for txn in normalized_transactions["transactions"]]

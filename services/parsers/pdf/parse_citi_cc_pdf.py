@@ -85,7 +85,7 @@ def extract_account_summary(statement_lines: list[str]) -> dict[str, Any]:
             )
 
         except Exception as e:
-            logger.warning(f"⚠️ Failed to extract field '{field['name']}': {e}")
+            logger.warning("⚠️ Failed to extract field '%s': %s", field["name"], e)
             summary_data[field["name"]] = None  # Preserve key for consistency
 
     return summary_data
@@ -102,10 +102,11 @@ def extract_field_value(
     for line in lines:
         if any(re.search(label, line) for label in label_patterns):
             match_obj = re.search(value_pattern, line)
-            logger.debug(f"line matched for '{field_name}': {line}")
+            logger.debug("line matched for '%s': %s", field_name, line)
             if not match_obj:
                 logging.warning(
-                    f"Found label match but no value match in line: '{line}'"
+                    "Found label match but no value match in line: '%s'",
+                    line,
                 )
                 return None
 
@@ -122,7 +123,9 @@ def extract_field_value(
                 transformed_val = cast("str | float | int", transformed_val)
             except ValueError:
                 logger.warning(
-                    f"Could not apply transform '{transform}' to value '{raw_val}'"
+                    "Could not apply transform '%s' to value '%s'",
+                    transform,
+                    raw_val,
                 )
                 return None
 
@@ -148,16 +151,21 @@ def extract_field_value(
                             except ValueError:
                                 continue
                         logging.warning(
-                            f"Could not parse date format: '{val_str}' for field '{field_name}'"
+                            "Could not parse date format: '%s' for field '%s'",
+                            val_str,
+                            field_name,
                         )
                         return None
                     case _:
                         return transformed_val
             except ValueError:
                 logger.warning(
-                    f"Could not cast '{transformed_val}' to {data_type} for '{field_name}'"
+                    "Could not cast '%s' to %s for '%s'",
+                    transformed_val,
+                    data_type,
+                    field_name,
                 )
                 return None
 
-    logger.debug(f"No match found for field: {field_name}")
+    logger.debug("No match found for field: %s", field_name)
     return None

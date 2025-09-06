@@ -83,7 +83,8 @@ def test_extract_account_summary_raises_and_recovers(mock_extract, mock_config):
     }
 
     def raise_exception(*_args, **_kwargs):
-        raise RuntimeError("parser boom")
+        error_msg = "parser boom"
+        raise RuntimeError(error_msg)
 
     mock_extract.side_effect = raise_exception
 

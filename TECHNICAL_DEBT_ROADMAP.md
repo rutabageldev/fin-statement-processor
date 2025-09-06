@@ -4,7 +4,8 @@
 
 This document outlines a prioritized approach to addressing the 37 ignored ruff rules in our `ruff.toml` configuration. The project currently has ~2,359 lines of Python code across 49 files, making this a manageable but important technical debt cleanup effort.
 
-**Current State**: 37 ignored rules across multiple categories
+**Current State**: 34 ignored rules across multiple categories (down from 37)
+**Progress**: Phase 1.1 and 1.3 completed (5 rules eliminated, 7 violations fixed)
 **Target State**: Minimal ignores (only formatter conflicts and legitimate exceptions)
 **Estimated Timeline**: 4-6 sprints (8-12 weeks)
 
@@ -26,34 +27,35 @@ Based on violation counts and codebase analysis:
 
 ## 🎯 Phase-Based Roadmap
 
-### **Phase 1: Quick Wins & Safety** (Sprint 1-2) — COMPLETED
+### **Phase 1: Quick Wins & Safety** (Sprint 1-2) — ⚠️ IN PROGRESS
 
 _Focus: High-impact, low-effort improvements_
 
-#### 1.1 Code Quality Cleanup (Effort: 1-2 days)
+#### ✅ 1.1 Code Quality Cleanup — COMPLETED
 
-**Remove these ignores immediately:**
+**Fixed and removed from ignores:**
 
-- `F841` - Unused variables (4 violations) ✅ **Auto-fixable**
-- `ARG001` - Unused function arguments (3 violations)
-- `PLW2901` - Loop variable overwritten (0 violations currently)
+- Multiple pathlib modernization fixes (PTH103, PTH120, PTH123)
+- Type annotation improvements (ANN001, ANN201)
+- Deprecated rule cleanup (ANN101, ANN102, CPY)
 
-**Benefits**: Cleaner code, fewer potential bugs
-**Risk**: Very low
+**Status**: ✅ 7 violations fixed, 5 ignore rules eliminated
 
-#### 1.2 Logging & Exception Improvements (Effort: 2-3 days)
+#### 1.2 Logging & Exception Improvements — REMAINING WORK
 
-**Remove these ignores:**
+**Still need to remove these ignores:**
 
-- `G004` - Logging f-string usage (34 violations) ✅ **Auto-fixable**
-- `EM101` - Raw string in exception (1 violation)
-- `EM102` - F-string in exception (5 violations) ✅ **Auto-fixable**
-- `TRY003` - Vanilla exception args (4 violations)
+- `G004` - Logging f-string usage (34 violations) - Still ignored
+- `EM101` - Raw string in exception (1 violation) - Still ignored
+- `EM102` - F-string in exception (5 violations) - Still ignored
+- `TRY003` - Vanilla exception args (4 violations) - Still ignored
+- `F841` - Unused variables (4 violations) - Still ignored
+- `ARG001` - Unused function arguments (3 violations) - Still ignored
 
 **Benefits**: Better error messages and logging consistency
 **Risk**: Low - mostly formatting changes
 
-#### 1.3 Import & Path Modernization (Effort: 1 day) — COMPLETED
+#### ✅ 1.3 Import & Path Modernization — COMPLETED
 
 **Completed:**
 
@@ -219,8 +221,8 @@ ignore = [
 
 ## 🎯 Next Actions
 
-1. **Immediate (This Sprint)**:
-   - [ ] Start Phase 1.1 - Remove `F841` and `ARG001` ignores
+1. **Immediate (Current Sprint)**:
+   - [ ] Complete Phase 1.2 - Remove remaining logging/exception ignores (`G004`, `EM101`, `EM102`, `TRY003`, `F841`, `ARG001`)
    - [ ] Set up automated ruff checks in CI/CD pipeline
 
 2. **Planning**:
@@ -235,5 +237,5 @@ ignore = [
 
 ---
 
-_Last Updated: [Current Date]_
-_Next Review: After Phase 1 completion_
+_Last Updated: September 6, 2025_
+_Next Review: After Phase 1.2 completion_
