@@ -51,9 +51,7 @@ Ledgerly is a personal finance webapp designed to ingest, process, and visualize
 
 ## 📋 Phase-Based Roadmap
 
-### **Phase 1: Foundation & Cleanup** (Sprint 1) - **HIGH PRIORITY**
-
-_Duration: 1-2 weeks_
+### **Phase 1: Foundation & Cleanup**
 
 #### Goals
 
@@ -65,11 +63,11 @@ _Duration: 1-2 weeks_
 #### Deliverables
 
 - ✅ Remove technical debt roadmap (completed)
-- [ ] Monorepo restructure (`/frontend`, `/backend` directories)
+- ✅ Monorepo restructure (`/frontend`, `/backend` directories)
 - [ ] PostgreSQL integration with SQLAlchemy models
 - [ ] Database migrations system
-- [ ] Updated Docker compose for multi-service development
-- [ ] Development workflow documentation
+- ✅ Updated Docker compose for multi-service development
+- ✅ Development workflow documentation
 
 #### Definition of Done
 
@@ -80,9 +78,7 @@ _Duration: 1-2 weeks_
 
 ---
 
-### **Phase 2: Backend API** (Sprint 2-3) - **HIGH PRIORITY**
-
-_Duration: 2-3 weeks_
+### **Phase 2: Backend API** (Sprint 2-3)
 
 #### Goals
 
@@ -128,9 +124,7 @@ _Duration: 2-3 weeks_
 
 ---
 
-### **Phase 3: Frontend Foundation** (Sprint 4) - **HIGH PRIORITY**
-
-_Duration: 2-3 weeks_
+### **Phase 3: Frontend Foundation**
 
 #### Goals
 
@@ -169,9 +163,7 @@ _Duration: 2-3 weeks_
 
 ---
 
-### **Phase 4: MVP Polish** (Sprint 5) - **MEDIUM PRIORITY**
-
-_Duration: 1-2 weeks_
+### **Phase 4: MVP Polish**
 
 #### Goals
 
@@ -203,7 +195,7 @@ _Duration: 1-2 weeks_
 
 ---
 
-### **Phase 5: Post-MVP Enhancements** (Future) - **LOW PRIORITY**
+### **Phase 5: Post-MVP Enhancements**
 
 #### Goals
 
@@ -319,5 +311,5 @@ Before starting Phase 1, we should establish:
 
 ---
 
-_Last Updated: September 6, 2025_
+_Last Updated: September 7, 2025_
 _Current Phase: Pre-Phase 1 Documentation_
