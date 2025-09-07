@@ -1,53 +1,94 @@
-# Makefile
+# Makefile for Ledgerly Multi-Container Development
 
-BASE_NAME = fin-statement-processor-dev
-IMAGE_NAME = fin-statement-processor-dev
-
-# Sanitize branch name (replace slashes and dashes with underscores)
-RAW_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-SANITIZED_BRANCH := $(shell echo $(RAW_BRANCH) | sed 's#[/-]#_#g')
-
-CONTAINER_NAME = $(BASE_NAME)-$(SANITIZED_BRANCH)
-
-.PHONY: help build shell run clean rebuild
+.PHONY: help up down build rebuild logs shell-backend shell-frontend shell-postgres test clean status health
 
 ## Show available commands
 help:
-	@echo "Available commands for branch: $(RAW_BRANCH)"
-	@echo "  make build     - Build and start container: $(CONTAINER_NAME)"
-	@echo "  make rebuild   - Rebuild container for current branch"
-	@echo "  make shell     - Open a shell in the container"
-	@echo "  make run       - Run dev_parse.py inside the container"
-	@echo "  make clean     - Remove container for current branch"
+	@echo "🚀 Ledgerly Development Commands"
+	@echo ""
+	@echo "Core Commands:"
+	@echo "  make up        - Start all services (docker compose up -d)"
+	@echo "  make down      - Stop all services (docker compose down)"
+	@echo "  make build     - Build all services (docker compose build)"
+	@echo "  make rebuild   - Rebuild all services from scratch"
+	@echo "  make logs      - Show logs for all services"
+	@echo ""
+	@echo "Service Shell Access:"
+	@echo "  make shell-backend   - Open shell in backend container"
+	@echo "  make shell-frontend  - Open shell in frontend container"
+	@echo "  make shell-postgres  - Open psql shell in database"
+	@echo ""
+	@echo "Development:"
+	@echo "  make test      - Run backend tests in container"
+	@echo "  make status    - Show status of all services"
+	@echo "  make health    - Check health of all services"
+	@echo "  make clean     - Clean up containers, volumes, and images"
 
-## Build image and run container for current branch
+## Start all development services
+up:
+	@echo "🚀 Starting Ledgerly development environment..."
+	docker compose up -d
+	@echo "✅ All services started. Access:"
+	@echo "   Frontend: http://localhost:3000"
+	@echo "   Backend:  http://localhost:8000"
+	@echo "   API Docs: http://localhost:8000/docs"
+	@echo "   MinIO:    http://localhost:9001 (admin/admin)"
+
+## Stop all services
+down:
+	@echo "🛑 Stopping all services..."
+	docker compose down
+
+## Build all services
 build:
-	@if docker ps -a --format "{{.Names}}" | grep -q "^$(CONTAINER_NAME)$$"; then \
-		echo "❌ Container $(CONTAINER_NAME) already exists. Run 'make rebuild' to replace it."; \
-		exit 1; \
-	fi
-	docker build -f .devcontainer/Dockerfile.dev -t $(IMAGE_NAME) .
-	docker run -d \
-		--env-file .env \
-		--name $(CONTAINER_NAME) \
-		-v $(PWD):/app \
-		-w /app \
-		$(IMAGE_NAME) tail -f /dev/null
-	@echo "✅ Container $(CONTAINER_NAME) started."
+	@echo "🔨 Building all services..."
+	docker compose build
 
-## Rebuild image and container
+## Rebuild all services from scratch
 rebuild:
-	-@docker rm -f $(CONTAINER_NAME)
-	@$(MAKE) build
+	@echo "🔄 Rebuilding all services from scratch..."
+	docker compose down
+	docker compose build --no-cache
+	docker compose up -d
 
-## Open shell in the container
-shell:
-	@docker exec -it $(CONTAINER_NAME) bash
+## Show logs for all services
+logs:
+	docker compose logs -f
 
-## Run the dev_parse script
-run:
-	@docker exec -it $(CONTAINER_NAME) python -m services.dev_parse
+## Open shell in backend container
+shell-backend:
+	@echo "🐚 Opening shell in backend container..."
+	docker compose exec backend bash
 
-## Stop and remove container
+## Open shell in frontend container
+shell-frontend:
+	@echo "🐚 Opening shell in frontend container..."
+	docker compose exec frontend bash
+
+## Open PostgreSQL shell
+shell-postgres:
+	@echo "🐚 Opening PostgreSQL shell..."
+	docker compose exec postgres psql -U postgres -d ledgerly
+
+## Run backend tests
+test:
+	@echo "🧪 Running backend tests..."
+	docker compose exec backend pytest
+
+## Show service status
+status:
+	@echo "📊 Service Status:"
+	docker compose ps
+
+## Check service health
+health:
+	@echo "🏥 Health Check Results:"
+	@docker compose ps --format "table {{.Names}}\t{{.Status}}" | grep -E "(healthy|unhealthy|starting)"
+
+## Clean up everything
 clean:
-	-@docker rm -f $(CONTAINER_NAME)
+	@echo "🧹 Cleaning up containers, volumes, and images..."
+	@echo "⚠️  This will remove all data. Press Ctrl+C to cancel, Enter to continue..."
+	@read
+	docker compose down -v --rmi all
+	@echo "✅ Cleanup complete"

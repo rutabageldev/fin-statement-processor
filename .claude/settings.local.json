@@ -18,7 +18,13 @@
       "Bash(echo $PATH)",
       "Bash(docker-compose up:*)",
       "Bash(docker exec:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(claude-code --version)",
+      "Bash(claude --version)",
+      "Bash(echo $HOME)",
+      "Read(//home/rutabageldev/**)",
+      "Read(//home/rutabageldev/.config/**)",
+      "Bash(claude config list)"
     ],
     "deny": [],
     "ask": []
