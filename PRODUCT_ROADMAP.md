@@ -87,11 +87,19 @@ _Duration: 2-3 weeks_
 #### Goals
 
 - Create RESTful API endpoints
+- Implement integrated secrets management (SecureVault)
 - Implement file upload handling
 - Build data aggregation services
 
 #### Deliverables
 
+- [ ] **SecureVault Integration** (see ADR-005):
+  - [ ] Core SecureVault service with AES-256 encryption
+  - [ ] Secret storage database schema and models
+  - [ ] Admin API endpoints (`/api/v1/admin/secrets`)
+  - [ ] Migration of existing hardcoded secrets
+  - [ ] Runtime secret injection for all services
+  - [ ] Secret rotation capabilities for JWT keys
 - [ ] FastAPI application setup
 - [ ] Core API endpoints:
   - `POST /api/v1/statements` - Upload and parse files
@@ -110,11 +118,13 @@ _Duration: 2-3 weeks_
 
 #### Definition of Done
 
+- **SecureVault fully operational** with all secrets migrated from hardcoded values
 - All API endpoints tested and documented
 - File upload supports expected formats and sizes
 - Data aggregation accurate and performant
 - 95%+ test coverage for new code
 - API security best practices implemented
+- **Zero hardcoded secrets** remaining in configuration files
 
 ---
 
@@ -138,6 +148,11 @@ _Duration: 2-3 weeks_
 - [ ] Data visualization components:
   - Monthly spend breakdown (Recharts with custom Tailwind styling)
   - Category trends (Recharts line charts with Tailwind themes)
+- [ ] **SecureVault Admin UI**:
+  - [ ] Secret management interface (`/admin/secrets`)
+  - [ ] Secret creation and editing forms
+  - [ ] Secret rotation controls
+  - [ ] Audit log display
 - [ ] Responsive design with Tailwind breakpoints
 - [ ] Dark mode implementation with Tailwind's dark mode utilities
 - [ ] Custom toast notifications and error handling UI
@@ -146,6 +161,7 @@ _Duration: 2-3 weeks_
 #### Definition of Done
 
 - Complete user flow from upload to visualization
+- **SecureVault admin interface fully functional** with secret management capabilities
 - Responsive design tested on mobile/desktop
 - Error states handled gracefully
 - Frontend tests covering critical paths
@@ -167,6 +183,11 @@ _Duration: 1-2 weeks_
 
 - [ ] End-to-end testing automation (Playwright/Cypress)
 - [ ] Production Docker configuration
+- [ ] **SecureVault Production Hardening**:
+  - [ ] Encrypted secret backups
+  - [ ] Master key rotation procedures
+  - [ ] Secret audit reporting
+  - [ ] Security scanning integration
 - [ ] Basic authentication system
 - [ ] Error monitoring and logging
 - [ ] Performance monitoring
