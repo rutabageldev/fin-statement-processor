@@ -5,8 +5,8 @@ import pytest
 from models import CreditCardDetails
 
 
-def test_credit_card_details_missing_required_field():
-    data = {
+def test_credit_card_details_missing_required_field() -> None:
+    data: dict[str, object] = {
         "available_credit": 4200.00,
         "points_earned": 500,
         "points_redeemed": 200,
@@ -24,8 +24,8 @@ def test_credit_card_details_missing_required_field():
         )
 
 
-def test_credit_card_details_invalid_points_earned_type():
-    data = {
+def test_credit_card_details_invalid_points_earned_type() -> None:
+    data: dict[str, object] = {
         "credit_limit": 5000.0,
         "available_credit": 4200.00,
         "points_earned": "five hundred",
@@ -44,8 +44,8 @@ def test_credit_card_details_invalid_points_earned_type():
         )
 
 
-def test_cc_details_optional_id():
-    data = {
+def test_cc_details_optional_id() -> None:
+    data: dict[str, object] = {
         "credit_limit": 5000.0,
         "available_credit": 4240.0,
         "points_earned": 500,
@@ -60,8 +60,8 @@ def test_cc_details_optional_id():
     assert isinstance(obj.id, uuid4().__class__)
 
 
-def test_cc_details_non_numeric_field_raises():
-    data = {
+def test_cc_details_non_numeric_field_raises() -> None:
+    data: dict[str, object] = {
         "credit_limit": "FIVE THOUSAND",
         "available_credit": 4240.0,
         "points_earned": 500,
@@ -76,8 +76,8 @@ def test_cc_details_non_numeric_field_raises():
         CreditCardDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
 
 
-def test_cc_details_negative_rewards_values():
-    data = {
+def test_cc_details_negative_rewards_values() -> None:
+    data: dict[str, object] = {
         "credit_limit": 5000.0,
         "available_credit": 4240.0,
         "points_earned": -100,
@@ -93,8 +93,8 @@ def test_cc_details_negative_rewards_values():
     assert obj.points_redeemed == -50
 
 
-def test_cc_details_float_precision_edge_case():
-    data = {
+def test_cc_details_float_precision_edge_case() -> None:
+    data: dict[str, object] = {
         "credit_limit": "5000.999999",
         "available_credit": "4240.000001",
         "points_earned": "500",
@@ -110,9 +110,9 @@ def test_cc_details_float_precision_edge_case():
     assert round(obj.available_credit, 2) == 4240.00
 
 
-def test_credit_card_details_missing_points_defaults_to_zero():
+def test_credit_card_details_missing_points_defaults_to_zero() -> None:
     """Omit points_earned and points_redeemed — expect default values via .get() workaround or raise KeyError"""
-    data = {
+    data: dict[str, object] = {
         "credit_limit": 5000.00,
         "available_credit": 4200.00,
         "cash_advances": 0.00,
@@ -134,9 +134,9 @@ def test_credit_card_details_missing_points_defaults_to_zero():
     assert result.points_redeemed == 0
 
 
-def test_credit_card_details_invalid_point_types():
+def test_credit_card_details_invalid_point_types() -> None:
     """Non-integer points should raise ValueError"""
-    data = {
+    data: dict[str, object] = {
         "credit_limit": 5000.00,
         "available_credit": 4200.00,
         "points_earned": "lots",
@@ -155,9 +155,9 @@ def test_credit_card_details_invalid_point_types():
         )
 
 
-def test_credit_card_details_extra_fields_are_ignored():
+def test_credit_card_details_extra_fields_are_ignored() -> None:
     """Extra fields in the input dict should not break parsing"""
-    data = {
+    data: dict[str, object] = {
         "credit_limit": 5000.00,
         "available_credit": 4200.00,
         "points_earned": 200,
@@ -179,9 +179,9 @@ def test_credit_card_details_extra_fields_are_ignored():
     assert not hasattr(result, "extraneous_field")
 
 
-def test_credit_card_details_negative_balance_allowed():
+def test_credit_card_details_negative_balance_allowed() -> None:
     """Ensure parser can handle negative available_credit"""
-    data = {
+    data: dict[str, object] = {
         "credit_limit": 5000.00,
         "available_credit": -150.00,
         "points_earned": 100,

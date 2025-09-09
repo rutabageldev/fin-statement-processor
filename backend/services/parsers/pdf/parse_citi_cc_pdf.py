@@ -2,6 +2,7 @@
 
 import logging
 import re
+from collections.abc import Callable
 from datetime import UTC
 from datetime import datetime
 from io import BytesIO
@@ -19,7 +20,7 @@ logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
 logger = logging.getLogger(__name__)
 
-TRANSFORM_REGISTRY = {
+TRANSFORM_REGISTRY: dict[str, Callable[[str], int | float]] = {
     "dollars_to_points": lambda val: int(abs(float(val)) * 100),
     "percent_to_decimal": lambda val: round(float(val) / 100, 4),
 }

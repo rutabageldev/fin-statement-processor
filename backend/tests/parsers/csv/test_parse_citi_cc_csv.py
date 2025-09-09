@@ -1,15 +1,16 @@
 from io import StringIO
 from pathlib import Path
+from uuid import UUID
 from uuid import uuid4
 
 from services.parsers.csv.parse_citi_cc_csv import parse_citi_cc_csv
 
 
-statement_uuid = uuid4()
-account_slug = "citi_cc"
+statement_uuid: UUID = uuid4()
+account_slug: str = "citi_cc"
 
 
-def test_parse_citi_cc_csv():
+def test_parse_citi_cc_csv() -> None:
     # Arrange
     path = Path("tests/data/test-transactions_citi-cc.csv")
 
@@ -31,7 +32,7 @@ def test_parse_citi_cc_csv():
         assert transaction["type"] in {"debit", "credit", "refund", "payment"}
 
 
-def test_parse_citi_cc_csv_skips_row_with_no_amount():
+def test_parse_citi_cc_csv_skips_row_with_no_amount() -> None:
     csv_data = """Date,Description,Debit,Credit
 06/30/2025,No amount,,
 """
@@ -44,7 +45,7 @@ def test_parse_citi_cc_csv_skips_row_with_no_amount():
     assert result == []  # should skip this row
 
 
-def test_parse_citi_cc_csv_skips_row_with_bad_date():
+def test_parse_citi_cc_csv_skips_row_with_bad_date() -> None:
     csv_data = """Date,Description,Debit,Credit
 30-06-2025,Amazon,50.00,
 """
@@ -56,7 +57,7 @@ def test_parse_citi_cc_csv_skips_row_with_bad_date():
     assert result == []  # invalid date format
 
 
-def test_parse_citi_cc_csv_handles_credit_row_with_refund():
+def test_parse_citi_cc_csv_handles_credit_row_with_refund() -> None:
     csv_data = """Date,Description,Debit,Credit
 06/30/2025,Refund issued,,25.00
 """

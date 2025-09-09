@@ -1,6 +1,8 @@
 from datetime import UTC
 from datetime import date
 from datetime import datetime
+from typing import Any
+from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import UUID
 
@@ -12,10 +14,10 @@ from services.normalization import normalize_statement_data
 @patch("services.normalization.get_account_registry")
 @patch("services.normalization.get_institution_registry")
 def test_normalize_statement_data_happy_path(
-    mock_get_institution_registry,
-    mock_get_account_registry,
-    sample_pdf_data_cc,
-):
+    mock_get_institution_registry: MagicMock,
+    mock_get_account_registry: MagicMock,
+    sample_pdf_data_cc: dict[str, Any],
+) -> None:
     # Arrange
     mock_get_account_registry.return_value = {
         "citi_cc": {

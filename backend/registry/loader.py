@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 
 def load_yaml_registry(filename: str) -> dict[str, Any]:
@@ -17,7 +17,8 @@ def load_yaml_registry(filename: str) -> dict[str, Any]:
     """
     path = Path(__file__).parent / filename
     with path.open("r") as f:
-        return yaml.safe_load(f)
+        result = yaml.safe_load(f)
+        return result if isinstance(result, dict) else {}
 
 
 def get_account_registry() -> dict[str, Any]:

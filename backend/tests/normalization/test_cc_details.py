@@ -1,3 +1,5 @@
+from typing import Any
+from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import UUID
 from uuid import uuid4
@@ -8,9 +10,9 @@ from services.normalization import normalize_cc_details
 
 @patch("services.normalization.get_account_registry")
 def test_normalize_cc_details_happy_path(
-    mock_get_account_registry,
-    sample_pdf_data_cc,
-):
+    mock_get_account_registry: MagicMock,
+    sample_pdf_data_cc: dict[str, Any],
+) -> None:
     # Arrange
     mock_get_account_registry.return_value = {
         "citi_cc": {

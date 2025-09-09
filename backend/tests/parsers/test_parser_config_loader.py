@@ -2,12 +2,14 @@ import types
 from pathlib import Path
 
 import pytest
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 from services.parsers import parser_config_loader
 
 
-def test_load_parser_config_valid_file(monkeypatch, tmp_path):
+def test_load_parser_config_valid_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     # --- Arrange ---
     fake_base = tmp_path / "pdf" / "config"
     fake_base.mkdir(parents=True)
@@ -35,7 +37,7 @@ def test_load_parser_config_valid_file(monkeypatch, tmp_path):
     assert result["account_summary_fields"][0]["name"] == "previous_balance"
 
 
-def test_load_parser_config_file_not_found(monkeypatch):
+def test_load_parser_config_file_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
     # Patch to point to a known temp path
     fake_path = Path("/nonexistent/fake_loader.py")
     monkeypatch.setattr(parser_config_loader, "__file__", str(fake_path))
@@ -44,7 +46,9 @@ def test_load_parser_config_file_not_found(monkeypatch):
         parser_config_loader.load_parser_config("missing_config")
 
 
-def test_load_parser_config_invalid_yaml(monkeypatch, tmp_path):
+def test_load_parser_config_invalid_yaml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     bad_path = tmp_path / "pdf" / "config"
     bad_path.mkdir(parents=True)
     bad_file = bad_path / "bad_config.yaml"

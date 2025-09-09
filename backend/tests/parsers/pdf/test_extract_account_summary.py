@@ -1,3 +1,5 @@
+from typing import Any
+from unittest.mock import MagicMock
 from unittest.mock import patch
 
 from services.parsers.pdf.parse_citi_cc_pdf import extract_account_summary
@@ -5,7 +7,9 @@ from services.parsers.pdf.parse_citi_cc_pdf import extract_account_summary
 
 @patch("services.parsers.pdf.parse_citi_cc_pdf.load_parser_config")
 @patch("services.parsers.pdf.parse_citi_cc_pdf.extract_field_value")
-def test_extract_account_summary_happy_path(mock_extract, mock_config):
+def test_extract_account_summary_happy_path(
+    mock_extract: MagicMock, mock_config: MagicMock
+) -> None:
     # Fake parser config with 2 fields
     mock_config.return_value = {
         "account_summary_fields": [
@@ -42,7 +46,9 @@ def test_extract_account_summary_happy_path(mock_extract, mock_config):
 
 @patch("services.parsers.pdf.parse_citi_cc_pdf.load_parser_config")
 @patch("services.parsers.pdf.parse_citi_cc_pdf.extract_field_value")
-def test_extract_account_summary_partial_failure(mock_extract, mock_config):
+def test_extract_account_summary_partial_failure(
+    mock_extract: MagicMock, mock_config: MagicMock
+) -> None:
     mock_config.return_value = {
         "account_summary_fields": [
             {
@@ -70,7 +76,9 @@ def test_extract_account_summary_partial_failure(mock_extract, mock_config):
 
 @patch("services.parsers.pdf.parse_citi_cc_pdf.load_parser_config")
 @patch("services.parsers.pdf.parse_citi_cc_pdf.extract_field_value")
-def test_extract_account_summary_raises_and_recovers(mock_extract, mock_config):
+def test_extract_account_summary_raises_and_recovers(
+    mock_extract: MagicMock, mock_config: MagicMock
+) -> None:
     mock_config.return_value = {
         "account_summary_fields": [
             {
@@ -82,7 +90,7 @@ def test_extract_account_summary_raises_and_recovers(mock_extract, mock_config):
         ]
     }
 
-    def raise_exception(*_args, **_kwargs):
+    def raise_exception(*_args: Any, **_kwargs: Any) -> None:
         error_msg = "parser boom"
         raise RuntimeError(error_msg)
 
@@ -94,7 +102,7 @@ def test_extract_account_summary_raises_and_recovers(mock_extract, mock_config):
 
 
 @patch("services.parsers.pdf.parse_citi_cc_pdf.load_parser_config")
-def test_extract_account_summary_empty_config(mock_config):
+def test_extract_account_summary_empty_config(mock_config: MagicMock) -> None:
     mock_config.return_value = {"account_summary_fields": []}
 
     result = extract_account_summary(["Something: $10.00"])

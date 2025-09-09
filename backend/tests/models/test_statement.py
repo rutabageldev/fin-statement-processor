@@ -7,8 +7,8 @@ import pytest
 from models.statement import StatementData
 
 
-def test_statement_data_from_dict_missing_field_raises():
-    data = {
+def test_statement_data_from_dict_missing_field_raises() -> None:
+    data: dict[str, object] = {
         "bill_period_end": "2025-06-30"
         # 'bill_period_start' is missing
     }
@@ -23,8 +23,8 @@ def test_statement_data_from_dict_missing_field_raises():
         )
 
 
-def test_statement_data_from_dict_invalid_date_format_raises():
-    data = {
+def test_statement_data_from_dict_invalid_date_format_raises() -> None:
+    data: dict[str, object] = {
         "bill_period_start": "30-06-2025",  # invalid format (should be ISO)
         "bill_period_end": "2025-06-30",
     }
@@ -37,7 +37,7 @@ def test_statement_data_from_dict_invalid_date_format_raises():
         )
 
 
-def test_statement_data_missing_fields():
+def test_statement_data_missing_fields() -> None:
     with pytest.raises(KeyError):
         StatementData.from_dict(
             data={},  # completely empty
@@ -46,8 +46,8 @@ def test_statement_data_missing_fields():
         )
 
 
-def test_statement_data_invalid_date_format():
-    bad_data = {
+def test_statement_data_invalid_date_format() -> None:
+    bad_data: dict[str, object] = {
         "bill_period_start": "01-2025-06",  # wrong format
         "bill_period_end": "2025-06-30",
     }
@@ -59,8 +59,11 @@ def test_statement_data_invalid_date_format():
         )
 
 
-def test_statement_data_uploaded_at_defaults():
-    data = {"bill_period_start": "2025-06-01", "bill_period_end": "2025-06-30"}
+def test_statement_data_uploaded_at_defaults() -> None:
+    data: dict[str, object] = {
+        "bill_period_start": "2025-06-01",
+        "bill_period_end": "2025-06-30",
+    }
     result = StatementData.from_dict(
         data=data,
         institution_id=uuid4(),
@@ -69,8 +72,8 @@ def test_statement_data_uploaded_at_defaults():
     assert isinstance(result.uploaded_at, datetime)
 
 
-def test_statement_data_missing_dates():
-    data = {}
+def test_statement_data_missing_dates() -> None:
+    data: dict[str, object] = {}
     with pytest.raises(KeyError):
         StatementData.from_dict(
             data=data,
@@ -80,8 +83,8 @@ def test_statement_data_missing_dates():
         )
 
 
-def test_statement_data_extra_fields():
-    data = {
+def test_statement_data_extra_fields() -> None:
+    data: dict[str, object] = {
         "bill_period_start": "2025-06-01",
         "bill_period_end": "2025-06-30",
         "unexpected_field": "extra",
@@ -96,8 +99,8 @@ def test_statement_data_extra_fields():
     assert result.period_end.isoformat() == "2025-06-30"
 
 
-def test_statement_data_null_dates():
-    data = {"bill_period_start": None, "bill_period_end": None}
+def test_statement_data_null_dates() -> None:
+    data: dict[str, object] = {"bill_period_start": None, "bill_period_end": None}
     with pytest.raises(TypeError):
         StatementData.from_dict(
             data=data,

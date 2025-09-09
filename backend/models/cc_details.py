@@ -28,7 +28,7 @@ class CreditCardDetails(BaseModel):
     @classmethod
     def from_dict(
         cls,
-        data: dict,
+        data: dict[str, object],
         account_id: UUID,
         statement_id: UUID,
         cc_detail_id: UUID | None = None,
@@ -48,12 +48,16 @@ class CreditCardDetails(BaseModel):
             id=cc_detail_id or uuid4(),
             account_id=account_id,
             statement_id=statement_id,
-            credit_limit=float(data["credit_limit"]),
-            available_credit=float(data["available_credit"]),
-            points_earned=int(data["points_earned"]),
-            points_redeemed=int(data["points_redeemed"]),
-            cash_advances=float(data["cash_advances"]),
-            fees=float(data["fees"]),
-            purchases=float(data["purchases"]),
-            credits=float(data["credits"]),
+            credit_limit=float(data["credit_limit"]),  # type: ignore[arg-type]
+            available_credit=float(data["available_credit"]),  # type: ignore[arg-type]
+            points_earned=int(data["points_earned"])  # type: ignore[call-overload]
+            if data["points_earned"] is not None
+            else 0,
+            points_redeemed=int(data["points_redeemed"])  # type: ignore[call-overload]
+            if data["points_redeemed"] is not None
+            else 0,
+            cash_advances=float(data["cash_advances"]),  # type: ignore[arg-type]
+            fees=float(data["fees"]),  # type: ignore[arg-type]
+            purchases=float(data["purchases"]),  # type: ignore[arg-type]
+            credits=float(data["credits"]),  # type: ignore[arg-type]
         )

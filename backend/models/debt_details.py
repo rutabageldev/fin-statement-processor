@@ -27,7 +27,7 @@ class DebtDetails(BaseModel):
     @classmethod
     def from_dict(
         cls,
-        data: dict,
+        data: dict[str, object],
         account_id: UUID,
         statement_id: UUID,
         debt_detail_id: UUID | None = None,
@@ -43,17 +43,17 @@ class DebtDetails(BaseModel):
         Returns:
             DebtDetails instance with debt data
         """
-        payments = data.get("payments", 0.0)
-        interest_paid = data.get("interest_paid", 0.0)
+        payments = float(data.get("payments", 0.0))  # type: ignore[arg-type]
+        interest_paid = float(data.get("interest_paid", 0.0))  # type: ignore[arg-type]
         principal_paid = abs(payments) - interest_paid
         return cls(
             id=debt_detail_id or uuid4(),
             account_id=account_id,
             statement_id=statement_id,
             payments=payments,
-            min_payment_due=data["min_payment_due"],
-            payment_due_date=date.fromisoformat(data["payment_due_date"]),
-            interest_rate=data["interest_rate"],
+            min_payment_due=float(data["min_payment_due"]),  # type: ignore[arg-type]
+            payment_due_date=date.fromisoformat(str(data["payment_due_date"])),
+            interest_rate=float(data["interest_rate"]),  # type: ignore[arg-type]
             interest_paid=interest_paid,
             principal_paid=round(principal_paid, 2),
         )

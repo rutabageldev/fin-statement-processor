@@ -27,7 +27,7 @@ class StatementData(BaseModel):
     @classmethod
     def from_dict(
         cls,
-        data: dict,
+        data: dict[str, object],
         institution_id: UUID,
         account_id: UUID,
         file_url: str | None = None,
@@ -38,8 +38,8 @@ class StatementData(BaseModel):
             id=statement_id or uuid4(),
             institution_id=institution_id,
             account_id=account_id,
-            period_start=date.fromisoformat(data["bill_period_start"]),
-            period_end=date.fromisoformat(data["bill_period_end"]),
+            period_start=date.fromisoformat(str(data["bill_period_start"])),
+            period_end=date.fromisoformat(str(data["bill_period_end"])),
             file_url=file_url,
             uploaded_at=uploaded_at or datetime.now(UTC),
         )
@@ -54,7 +54,7 @@ class StatementDetails(BaseModel):
     @classmethod
     def from_dict(
         cls,
-        data: dict,
+        data: dict[str, object],
         statement_id: UUID,
         detail_id: UUID | None = None,
     ) -> "StatementDetails":
@@ -71,6 +71,6 @@ class StatementDetails(BaseModel):
         return cls(
             id=detail_id or uuid4(),
             statement_id=statement_id,
-            previous_balance=data["previous_balance"],
-            new_balance=data["new_balance"],
+            previous_balance=float(data["previous_balance"]),  # type: ignore[arg-type]
+            new_balance=float(data["new_balance"]),  # type: ignore[arg-type]
         )

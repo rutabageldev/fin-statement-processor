@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture
-def sample_pdf_data_cc():
+def sample_pdf_data_cc() -> dict[str, object]:
     """Expected output format for a credit card PDF Parser"""
     return {
         "account_summary": {
@@ -37,7 +37,7 @@ def sample_pdf_data_cc():
 
 
 @pytest.fixture
-def normalized_statement_data_cc():
+def normalized_statement_data_cc() -> dict[str, object]:
     """Expected results of the normalize_statement_data(sample_pdf_data_cc)"""
     return {
         "statement_data": {"previous_balance": 1000.00, "new_balance": 760.00},

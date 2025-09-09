@@ -5,8 +5,8 @@ import pytest
 from models.transactions import Transaction
 
 
-def test_transaction_missing_required_field():
-    data = {
+def test_transaction_missing_required_field() -> None:
+    data: dict[str, object] = {
         "date": "2025-06-30",
         "amount": 99.99,
         # "description": is missing
@@ -21,8 +21,8 @@ def test_transaction_missing_required_field():
         )
 
 
-def test_transaction_optional_fields_none():
-    data = {
+def test_transaction_optional_fields_none() -> None:
+    data: dict[str, object] = {
         "date": "2025-07-05",
         "amount": 50.00,
         "description": "Coffee shop",
@@ -34,8 +34,8 @@ def test_transaction_optional_fields_none():
     assert obj.category is None
 
 
-def test_transaction_invalid_date_format():
-    data = {
+def test_transaction_invalid_date_format() -> None:
+    data: dict[str, object] = {
         "date": "June 30, 2025",
         "amount": 99.99,
         "description": "Example Purchase",
@@ -50,8 +50,8 @@ def test_transaction_invalid_date_format():
         )
 
 
-def test_transaction_invalid_type_literal():
-    data = {
+def test_transaction_invalid_type_literal() -> None:
+    data: dict[str, object] = {
         "date": "2025-06-30",
         "amount": 99.99,
         "description": "Invalid type example",
@@ -66,8 +66,8 @@ def test_transaction_invalid_type_literal():
         )
 
 
-def test_transaction_negative_amount_allowed():
-    data = {
+def test_transaction_negative_amount_allowed() -> None:
+    data: dict[str, object] = {
         "date": "2025-07-05",
         "amount": -12.75,
         "description": "Overdraft fee",
@@ -78,8 +78,8 @@ def test_transaction_negative_amount_allowed():
     assert obj.amount == -12.75
 
 
-def test_transaction_missing_required_field_raises():
-    data = {
+def test_transaction_missing_required_field_raises() -> None:
+    data: dict[str, object] = {
         # missing amount
         "date": "2025-07-05",
         "description": "Forgot to include amount",
@@ -90,36 +90,36 @@ def test_transaction_missing_required_field_raises():
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
 
 
-def test_transaction_missing_type():
-    data = {
+def test_transaction_missing_type() -> None:
+    stmt_id = uuid4()
+    acc_id = uuid4()
+    data: dict[str, object] = {
         "date": "2025-06-01",
         "amount": 100.0,
         "description": "Test",
-        "statement_id": uuid4(),
-        "account_id": uuid4(),
+        "statement_id": stmt_id,
+        "account_id": acc_id,
     }
     with pytest.raises(KeyError):
-        Transaction.from_dict(
-            data, statement_id=data["statement_id"], account_id=data["account_id"]
-        )
+        Transaction.from_dict(data, statement_id=stmt_id, account_id=acc_id)
 
 
-def test_transaction_missing_amount():
-    data = {
+def test_transaction_missing_amount() -> None:
+    stmt_id = uuid4()
+    acc_id = uuid4()
+    data: dict[str, object] = {
         "date": "2025-06-01",
         "description": "Test",
         "type": "debit",
-        "statement_id": uuid4(),
-        "account_id": uuid4(),
+        "statement_id": stmt_id,
+        "account_id": acc_id,
     }
     with pytest.raises(KeyError):
-        Transaction.from_dict(
-            data, statement_id=data["statement_id"], account_id=data["account_id"]
-        )
+        Transaction.from_dict(data, statement_id=stmt_id, account_id=acc_id)
 
 
-def test_transaction_invalid_type_value():
-    data = {
+def test_transaction_invalid_type_value() -> None:
+    data: dict[str, object] = {
         "date": "2025-06-01",
         "amount": 100.0,
         "description": "Test",
@@ -129,8 +129,8 @@ def test_transaction_invalid_type_value():
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
 
 
-def test_transaction_future_date_parses():
-    data = {
+def test_transaction_future_date_parses() -> None:
+    data: dict[str, object] = {
         "date": "2125-01-01",
         "amount": 100.0,
         "description": "Future txn",
@@ -140,8 +140,8 @@ def test_transaction_future_date_parses():
     assert txn.date.isoformat() == "2125-01-01"
 
 
-def test_transaction_ancient_date_parses():
-    data = {
+def test_transaction_ancient_date_parses() -> None:
+    data: dict[str, object] = {
         "date": "1925-01-01",
         "amount": 100.0,
         "description": "Ancient txn",
@@ -151,8 +151,8 @@ def test_transaction_ancient_date_parses():
     assert txn.date.isoformat() == "1925-01-01"
 
 
-def test_transaction_malformed_amount():
-    data = {
+def test_transaction_malformed_amount() -> None:
+    data: dict[str, object] = {
         "date": "2025-06-01",
         "amount": "25.00USD",
         "description": "Bad amount",

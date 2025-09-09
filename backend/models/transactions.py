@@ -28,7 +28,7 @@ class Transaction(BaseModel):
     @classmethod
     def from_dict(
         cls,
-        data: dict,
+        data: dict[str, object],
         statement_id: UUID,
         account_id: UUID,
         transaction_id: UUID | None = None,
@@ -48,10 +48,14 @@ class Transaction(BaseModel):
             id=transaction_id or uuid4(),
             statement_id=statement_id,
             account_id=account_id,
-            date=date.fromisoformat(data["date"]),
-            amount=float(data["amount"]),
-            description=data["description"],
-            custom_description=data.get("custom_description"),
-            category=data.get("category"),
-            type=data["type"],
+            date=date.fromisoformat(str(data["date"])),
+            amount=float(data["amount"]),  # type: ignore[arg-type]
+            description=str(data["description"]),
+            custom_description=str(data["custom_description"])
+            if data.get("custom_description") is not None
+            else None,
+            category=str(data["category"])
+            if data.get("category") is not None
+            else None,
+            type=str(data["type"]),  # type: ignore[arg-type]
         )

@@ -24,7 +24,9 @@
       "Bash(echo $HOME)",
       "Read(//home/rutabageldev/**)",
       "Read(//home/rutabageldev/.config/**)",
-      "Bash(claude config list)"
+      "Bash(claude config list)",
+      "Bash(alembic init:*)",
+      "Bash(mypy:*)"
     ],
     "deny": [],
     "ask": []

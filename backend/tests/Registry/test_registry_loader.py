@@ -1,7 +1,8 @@
 import types
+from pathlib import Path
 
 import pytest
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 from registry import loader
 
@@ -9,7 +10,9 @@ from registry import loader
 # ---------- Account Registry Tests ----------
 
 
-def test_get_account_registry_valid_file(monkeypatch, tmp_path):
+def test_get_account_registry_valid_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     # --- Arrange ---
     account_file = tmp_path / "account_registry.yaml"
     account_file.write_text(
@@ -32,7 +35,7 @@ citi_cc:
     assert result["citi_cc"]["metadata"]["institution"] == "citibank"
 
 
-def test_get_account_registry_file_not_found(monkeypatch):
+def test_get_account_registry_file_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
     # --- Arrange ---
     fake_loader = types.SimpleNamespace(__file__="/nonexistent/fake_loader.py")
     monkeypatch.setattr(loader, "__file__", fake_loader.__file__)
@@ -42,7 +45,9 @@ def test_get_account_registry_file_not_found(monkeypatch):
         loader.get_account_registry()
 
 
-def test_get_account_registry_invalid_yaml(monkeypatch, tmp_path):
+def test_get_account_registry_invalid_yaml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     # --- Arrange ---
     bad_file = tmp_path / "account_registry.yaml"
     bad_file.write_text("this: is: invalid: yaml: : :")
@@ -58,7 +63,9 @@ def test_get_account_registry_invalid_yaml(monkeypatch, tmp_path):
 # ---------- Institution Registry Tests ----------
 
 
-def test_get_institution_registry_valid_file(monkeypatch, tmp_path):
+def test_get_institution_registry_valid_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     # --- Arrange ---
     institution_file = tmp_path / "institution_registry.yaml"
     institution_file.write_text(
@@ -79,7 +86,9 @@ citibank:
     assert result["citibank"]["uuid"] == "abcd"
 
 
-def test_get_institution_registry_file_not_found(monkeypatch):
+def test_get_institution_registry_file_not_found(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     fake_loader = types.SimpleNamespace(__file__="/nonexistent/fake_loader.py")
     monkeypatch.setattr(loader, "__file__", fake_loader.__file__)
 
@@ -87,7 +96,9 @@ def test_get_institution_registry_file_not_found(monkeypatch):
         loader.get_institution_registry()
 
 
-def test_get_institution_registry_invalid_yaml(monkeypatch, tmp_path):
+def test_get_institution_registry_invalid_yaml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     bad_file = tmp_path / "institution_registry.yaml"
     bad_file.write_text("this: is: invalid: yaml")
 

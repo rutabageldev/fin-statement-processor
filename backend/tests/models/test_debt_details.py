@@ -5,8 +5,8 @@ import pytest
 from models.debt_details import DebtDetails
 
 
-def test_debt_details_missing_required_field():
-    data = {
+def test_debt_details_missing_required_field() -> None:
+    data: dict[str, object] = {
         "payment_due_date": "2025-06-30",
         "interest_rate": 0.21,
         "interest_paid": 10.00,
@@ -21,8 +21,8 @@ def test_debt_details_missing_required_field():
         )
 
 
-def test_debt_details_invalid_date_format():
-    data = {
+def test_debt_details_invalid_date_format() -> None:
+    data: dict[str, object] = {
         "min_payment_due": 35.00,
         "payment_due_date": "June 30th, 2025",
         "interest_rate": 0.21,
@@ -38,8 +38,8 @@ def test_debt_details_invalid_date_format():
         )
 
 
-def test_debt_details_optional_id():
-    data = {
+def test_debt_details_optional_id() -> None:
+    data: dict[str, object] = {
         "min_payment_due": 35.00,
         "payment_due_date": "2025-06-30",
         "interest_rate": 0.21,
@@ -51,8 +51,8 @@ def test_debt_details_optional_id():
     assert isinstance(obj.id, uuid4().__class__)
 
 
-def test_debt_details_negative_interest_and_payments():
-    data = {
+def test_debt_details_negative_interest_and_payments() -> None:
+    data: dict[str, object] = {
         "min_payment_due": 35.00,
         "payment_due_date": "2025-06-30",
         "interest_rate": 0.21,
@@ -66,8 +66,8 @@ def test_debt_details_negative_interest_and_payments():
     assert obj.principal_paid == round(abs(-200.00) - (-5.00), 2)
 
 
-def test_debt_details_principal_rounding():
-    data = {
+def test_debt_details_principal_rounding() -> None:
+    data: dict[str, object] = {
         "min_payment_due": 40.00,
         "payment_due_date": "2025-06-30",
         "interest_rate": 0.15,
@@ -79,8 +79,8 @@ def test_debt_details_principal_rounding():
     assert round(obj.principal_paid, 2) == round(90.0, 2)
 
 
-def test_debt_details_missing_optional_id_generates_uuid():
-    data = {
+def test_debt_details_missing_optional_id_generates_uuid() -> None:
+    data: dict[str, object] = {
         "min_payment_due": 50.0,
         "payment_due_date": "2025-07-15",
         "interest_rate": 0.2,
@@ -92,9 +92,9 @@ def test_debt_details_missing_optional_id_generates_uuid():
     assert isinstance(obj.id, uuid4().__class__)
 
 
-def test_debt_details_payment_less_than_interest():
+def test_debt_details_payment_less_than_interest() -> None:
     """Ensure principal_paid is negative if interest > payments"""
-    data = {
+    data: dict[str, object] = {
         "payments": 50.00,
         "interest_paid": 75.00,
         "min_payment_due": 35.00,
@@ -113,9 +113,9 @@ def test_debt_details_payment_less_than_interest():
     assert result.principal_paid == -25.00
 
 
-def test_debt_details_all_zero_values():
+def test_debt_details_all_zero_values() -> None:
     """Validate edge case with all zero debt-related values"""
-    data = {
+    data: dict[str, object] = {
         "payments": 0.00,
         "interest_paid": 0.00,
         "min_payment_due": 0.00,

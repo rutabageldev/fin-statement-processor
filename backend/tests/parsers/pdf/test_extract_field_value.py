@@ -1,7 +1,7 @@
 from services.parsers.pdf.parse_citi_cc_pdf import extract_field_value
 
 
-def test_extract_field_value_happy_path_float():
+def test_extract_field_value_happy_path_float() -> None:
     lines = [
         "Minimum Payment Due: $35.00",
         "Previous Balance: $1000.00",
@@ -21,7 +21,7 @@ def test_extract_field_value_happy_path_float():
     assert result == 35.00
 
 
-def test_extract_field_value_happy_path_int():
+def test_extract_field_value_happy_path_int() -> None:
     lines = ["Points Earned: 1,250"]
     label_patterns = [r"Points Earned"]
     value_pattern = r"[\d,]+"
@@ -38,7 +38,7 @@ def test_extract_field_value_happy_path_int():
     assert result == 1250
 
 
-def test_extract_field_value_happy_path_date():
+def test_extract_field_value_happy_path_date() -> None:
     lines = ["Statement Period: 06/30/2025"]
     label_patterns = [r"Statement Period"]
     value_pattern = r"\d{2}/\d{2}/\d{4}"
@@ -55,7 +55,7 @@ def test_extract_field_value_happy_path_date():
     assert result == "2025-06-30"
 
 
-def test_extract_field_value_returns_string():
+def test_extract_field_value_returns_string() -> None:
     lines = ["Account Type: Credit"]
     label_patterns = [r"Account Type"]
     value_pattern = r"Credit"
@@ -72,7 +72,7 @@ def test_extract_field_value_returns_string():
     assert result == "Credit"
 
 
-def test_extract_field_value_label_match_no_value_match():
+def test_extract_field_value_label_match_no_value_match() -> None:
     lines = [
         "Minimum Payment Due: TBD",  # Label matches but value is non-numeric
     ]
@@ -91,7 +91,7 @@ def test_extract_field_value_label_match_no_value_match():
     assert result is None
 
 
-def test_extract_field_value_dollars_to_points_transform():
+def test_extract_field_value_dollars_to_points_transform() -> None:
     lines = ["Points Earned: $2.50"]
     label_patterns = [r"Points Earned"]
     value_pattern = r"\$[\d.]+"
@@ -110,7 +110,7 @@ def test_extract_field_value_dollars_to_points_transform():
     assert result == 250
 
 
-def test_extract_field_value_percent_to_decimal_transform():
+def test_extract_field_value_percent_to_decimal_transform() -> None:
     lines = ["APR: 21.99"]
     label_patterns = [r"APR"]
     value_pattern = r"[\d.]+"
@@ -129,7 +129,7 @@ def test_extract_field_value_percent_to_decimal_transform():
     assert result == 0.2199
 
 
-def test_extract_field_value_invalid_transform_value_returns_none():
+def test_extract_field_value_invalid_transform_value_returns_none() -> None:
     lines = ["APR: not_a_number"]
     label_patterns = [r"APR"]
     value_pattern = r"not_a_number"
@@ -148,7 +148,7 @@ def test_extract_field_value_invalid_transform_value_returns_none():
     assert result is None
 
 
-def test_extract_field_value_unknown_transform_skips_safely():
+def test_extract_field_value_unknown_transform_skips_safely() -> None:
     lines = ["Some Value: 123.45"]
     label_patterns = [r"Some Value"]
     value_pattern = r"[\d.]+"
