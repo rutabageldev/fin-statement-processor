@@ -29,7 +29,7 @@ def test_statement_data_from_dict_invalid_date_format_raises() -> None:
         "bill_period_end": "2025-06-30",
     }
 
-    with pytest.raises(ValueError, match="(invalid|does not match)"):
+    with pytest.raises(ValueError, match="Invalid isoformat string"):
         StatementData.from_dict(
             data=data,
             institution_id=uuid4(),
@@ -51,7 +51,7 @@ def test_statement_data_invalid_date_format() -> None:
         "bill_period_start": "01-2025-06",  # wrong format
         "bill_period_end": "2025-06-30",
     }
-    with pytest.raises(ValueError, match="(invalid|does not match)"):
+    with pytest.raises(ValueError, match="Invalid isoformat string"):
         StatementData.from_dict(
             data=bad_data,
             institution_id=uuid4(),
@@ -101,7 +101,7 @@ def test_statement_data_extra_fields() -> None:
 
 def test_statement_data_null_dates() -> None:
     data: dict[str, object] = {"bill_period_start": None, "bill_period_end": None}
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError, match="Invalid isoformat string"):
         StatementData.from_dict(
             data=data,
             institution_id=uuid4(),

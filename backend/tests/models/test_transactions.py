@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+from pydantic import ValidationError
 
 from models.transactions import Transaction
 
@@ -42,7 +43,7 @@ def test_transaction_invalid_date_format() -> None:
         "type": "debit",
     }
 
-    with pytest.raises(ValueError, match="(invalid|could not convert)"):
+    with pytest.raises(ValueError, match="(Invalid isoformat string|validation error)"):
         Transaction.from_dict(
             data=data,
             statement_id=uuid4(),
@@ -58,7 +59,7 @@ def test_transaction_invalid_type_literal() -> None:
         "type": "withdrawal",  # invalid value
     }
 
-    with pytest.raises(ValueError, match="(invalid|could not convert)"):
+    with pytest.raises(ValidationError):
         Transaction.from_dict(
             data=data,
             statement_id=uuid4(),
@@ -125,7 +126,7 @@ def test_transaction_invalid_type_value() -> None:
         "description": "Test",
         "type": "other",  # Not allowed
     }
-    with pytest.raises(ValueError, match="(invalid|could not convert)"):
+    with pytest.raises(ValidationError):
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())
 
 
@@ -158,5 +159,5 @@ def test_transaction_malformed_amount() -> None:
         "description": "Bad amount",
         "type": "debit",
     }
-    with pytest.raises(ValueError, match="(invalid|could not convert)"):
+    with pytest.raises(ValueError, match="could not convert string to float"):
         Transaction.from_dict(data, statement_id=uuid4(), account_id=uuid4())

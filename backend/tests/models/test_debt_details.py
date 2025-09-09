@@ -30,7 +30,7 @@ def test_debt_details_invalid_date_format() -> None:
         "payments": 500.00,
     }
 
-    with pytest.raises(ValueError, match="invalid literal"):
+    with pytest.raises(ValueError, match="Invalid isoformat string"):
         DebtDetails.from_dict(
             data=data,
             account_id=uuid4(),

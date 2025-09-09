@@ -36,7 +36,7 @@ def test_credit_card_details_invalid_points_earned_type() -> None:
         "credits": 0.0,
     }
 
-    with pytest.raises(ValueError, match="invalid literal"):
+    with pytest.raises(ValueError, match="invalid literal for int"):
         CreditCardDetails.from_dict(
             data=data,
             account_id=uuid4(),
@@ -72,7 +72,7 @@ def test_cc_details_non_numeric_field_raises() -> None:
         "credits": 0.0,
     }
 
-    with pytest.raises(ValueError, match="invalid literal"):
+    with pytest.raises(ValueError, match="could not convert string to float"):
         CreditCardDetails.from_dict(data, account_id=uuid4(), statement_id=uuid4())
 
 
@@ -147,7 +147,7 @@ def test_credit_card_details_invalid_point_types() -> None:
         "credits": 0.00,
     }
 
-    with pytest.raises(ValueError, match="invalid literal"):
+    with pytest.raises(ValueError, match="invalid literal for int"):
         CreditCardDetails.from_dict(
             data=data,
             account_id=uuid4(),
