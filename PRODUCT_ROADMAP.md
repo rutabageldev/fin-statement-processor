@@ -62,10 +62,10 @@ Ledgerly is a personal finance webapp designed to ingest, process, and visualize
 
 #### Deliverables
 
-- ✅ Remove technical debt roadmap (completed)
+- ✅ Remove technical debt roadmap
 - ✅ Monorepo restructure (`/frontend`, `/backend` directories)
-- [ ] PostgreSQL integration with SQLAlchemy models
-- [ ] Database migrations system
+- ✅ PostgreSQL integration with SQLAlchemy models
+- ✅ Database migrations system
 - ✅ Updated Docker compose for multi-service development
 - ✅ Development workflow documentation
 
