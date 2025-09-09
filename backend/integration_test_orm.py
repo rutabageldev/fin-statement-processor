@@ -5,6 +5,7 @@ import logging
 from datetime import date
 from decimal import Decimal
 
+import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
@@ -24,6 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.anyio
 async def test_basic_queries() -> None:
     """Test basic ORM functionality."""
     logger.info("🧪 Testing SQLAlchemy ORM implementation...")
@@ -40,6 +42,7 @@ async def test_basic_queries() -> None:
         logger.info("✅ Found %d account types in database", len(account_types))
 
 
+@pytest.mark.anyio
 async def test_orm_models() -> None:
     """Test ORM model creation and relationships."""
     logger.info("🧪 Testing ORM model creation and relationships...")
@@ -140,6 +143,7 @@ async def test_orm_models() -> None:
         logger.info("✅ All test data committed to database")
 
 
+@pytest.mark.anyio
 async def test_relationships() -> None:
     """Test ORM relationships."""
     logger.info("🧪 Testing ORM relationships...")

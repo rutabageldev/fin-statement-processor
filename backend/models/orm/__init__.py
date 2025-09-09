@@ -6,6 +6,8 @@ from .base import Base
 from .base import TimestampMixin
 from .credit_card_detail import CreditCardDetail
 from .institution import Institution
+from .secret import Secret
+from .secret import SecretAuditLog
 from .statement import Statement
 from .statement_detail import StatementDetail
 from .transaction import Transaction
@@ -18,6 +20,8 @@ __all__ = [
     "Base",
     "CreditCardDetail",
     "Institution",
+    "Secret",
+    "SecretAuditLog",
     "Statement",
     "StatementDetail",
     "TimestampMixin",

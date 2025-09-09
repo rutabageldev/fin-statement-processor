@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Import base for easy access
 from models.orm.base import Base
+from services.secure_vault.config_manager import get_config_manager
 
 
 class DatabaseConfig:
@@ -20,10 +21,17 @@ class DatabaseConfig:
 
     def __init__(self) -> None:
         """Initialize database configuration."""
-        self.database_url = os.getenv(
-            "DATABASE_URL",
-            "postgresql://postgres:dev_password@localhost:5432/ledgerly",  # pragma: allowlist secret
-        )
+        # Try to get database URL from config manager (with SecureVault integration)
+        try:
+            config_manager = get_config_manager()
+            self.database_url = config_manager.get_database_url()
+        except Exception:  # noqa: BLE001
+            # Fallback to environment variable or default
+            self.database_url = os.getenv(
+                "DATABASE_URL",
+                "postgresql://postgres:dev_password@localhost:5432/ledgerly",  # pragma: allowlist secret
+            )
+
         self.async_database_url = self.database_url.replace(
             "postgresql://", "postgresql+asyncpg://"
         )
